@@ -1,21 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Star } from "lucide-react";
-import { useState } from "react";
-import { AuthModal } from "@/components/auth/AuthModal";
-import { useAuth } from "@/contexts/AuthContext";
 
 const CTASection = () => {
-  const { user } = useAuth();
-  const [showAuthModal, setShowAuthModal] = useState(false);
-
-  const handleGetStarted = () => {
-    if (!user) {
-      setShowAuthModal(true);
-    } else {
-      // Navigate to essay creation (to be implemented)
-      console.log("Navigate to essay creation");
-    }
-  };
   return (
     <section className="py-24 relative overflow-hidden">
       {/* Background */}
@@ -43,8 +29,8 @@ const CTASection = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="hero" size="lg" className="group" onClick={handleGetStarted}>
-              {user ? "Create Your Essay" : "Start Writing Now"}
+            <Button variant="hero" size="lg" className="group">
+              Start Writing Now
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button variant="outline" size="lg">
@@ -62,11 +48,6 @@ const CTASection = () => {
           </div>
         </div>
       </div>
-      
-      <AuthModal 
-        isOpen={showAuthModal} 
-        onClose={() => setShowAuthModal(false)} 
-      />
     </section>
   );
 };

@@ -1,6 +1,5 @@
 import { GraduationCap, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { UserMenu } from "@/components/UserMenu";
 
 const Header = () => {
   return (
@@ -16,16 +15,19 @@ const Header = () => {
           </span>
         </div>
         
-        <nav className="flex items-center gap-6">
-          <div className="hidden md:flex items-center gap-6">
-            <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors">
-              How it Works
-            </a>
-            <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">
-              Features
-            </a>
-          </div>
-          <UserMenu />
+        <nav className="hidden md:flex items-center gap-6">
+          <a href="#how-it-works" className="text-muted-foreground hover:text-primary transition-colors">
+            How it Works
+          </a>
+          <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">
+            Features
+          </a>
+          <Button variant="ghost" size="sm">
+            Sign In
+          </Button>
+          <Button variant="hero" size="sm">
+            Get Started
+          </Button>
         </nav>
       </div>
     </header>
