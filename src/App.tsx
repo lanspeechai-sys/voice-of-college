@@ -4,10 +4,14 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
+import Pricing from "./pages/Pricing";
+import Auth from "./pages/Auth";
 import EssayBuilder from "./pages/EssayBuilder";
 import EssayResult from "./pages/EssayResult";
 import Dashboard from "./pages/Dashboard";
+import HumanReview from "./pages/HumanReview";
 import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
@@ -19,9 +23,28 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/essay-builder" element={<EssayBuilder />} />
-          <Route path="/essay-result" element={<EssayResult />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/essay-builder" element={
+            <ProtectedRoute>
+              <EssayBuilder />
+            </ProtectedRoute>
+          } />
+          <Route path="/essay-result" element={
+            <ProtectedRoute>
+              <EssayResult />
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/human-review" element={
+            <ProtectedRoute>
+              <HumanReview />
+            </ProtectedRoute>
+          } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

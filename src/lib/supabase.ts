@@ -16,6 +16,9 @@ export interface Essay {
   updated_at: string;
   is_shared: boolean;
   share_token?: string;
+  review_status?: 'pending' | 'in_review' | 'completed';
+  human_review?: string;
+  review_requested_at?: string;
 }
 
 export interface User {
@@ -23,6 +26,15 @@ export interface User {
   email: string;
   full_name: string;
   created_at: string;
+  subscription_plan: 'free' | 'monthly' | 'yearly';
+  subscription_status: 'active' | 'cancelled' | 'expired';
+  essays_generated: number;
+  human_reviews_used: number;
+  subscription_expires_at?: string;
+  plan_limits: {
+    essays: number;
+    human_reviews: number;
+  };
 }
 
 // Auth functions
@@ -33,6 +45,11 @@ export const signUp = async (email: string, password: string, fullName: string) 
     options: {
       data: {
         full_name: fullName,
+        subscription_plan: 'free',
+        subscription_status: 'active',
+        essays_generated: 0,
+        human_reviews_used: 0,
+        plan_limits: { essays: 1, human_reviews: 0 }
       },
     },
   });

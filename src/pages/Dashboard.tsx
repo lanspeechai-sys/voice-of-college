@@ -96,6 +96,16 @@ export default function Dashboard() {
                   <Plus className="h-4 w-4 mr-2" />
                   Create Your First Essay
                 </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    // TODO: Implement sharing
+                    toast.success("Sharing feature coming soon!");
+                  }}
+                >
+                  <Share2 className="h-4 w-4" />
+                </Button>
               </CardContent>
             </Card>
           ) : (

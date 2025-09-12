@@ -61,6 +61,9 @@ const Header = () => {
           <a href="#features" className="text-muted-foreground hover:text-primary transition-colors">
             Features
           </a>
+          <a href="/pricing" className="text-muted-foreground hover:text-primary transition-colors">
+            Pricing
+          </a>
           
           {isLoading ? (
             <div className="w-20 h-8 bg-muted animate-pulse rounded" />
@@ -68,6 +71,9 @@ const Header = () => {
             <>
               <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")}>
                 Dashboard
+              </Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/human-review")}>
+                Human Review
               </Button>
               <Button variant="ghost" size="sm" onClick={handleSignOut}>
                 Sign Out
@@ -88,7 +94,7 @@ const Header = () => {
               <Button 
                 variant="hero" 
                 size="sm"
-                onClick={() => navigate("/essay-builder")}
+                onClick={() => navigate("/auth")}
               >
                 Get Started
               </Button>

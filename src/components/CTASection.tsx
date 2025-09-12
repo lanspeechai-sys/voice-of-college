@@ -36,7 +36,7 @@ const CTASection = () => {
               variant="hero" 
               size="lg" 
               className="group"
-              onClick={() => navigate("/essay-builder")}
+              onClick={() => navigate("/auth")}
             >
               Start Writing Now
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
