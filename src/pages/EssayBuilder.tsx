@@ -1,4 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { generateEssay } from "@/lib/openai";
+import { saveEssay, getCurrentUser } from "@/lib/supabase";
+import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
+import { toast } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -7,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, Mic, MicOff, School, FileText, Users, Sparkles } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 interface SchoolOption {
   id: string;
@@ -80,14 +85,21 @@ const QUESTIONS = [
 
 export default function EssayBuilder() {
   const navigate = useNavigate();
+  const speechRecognition = useSpeechRecognition();
   const [step, setStep] = useState(1);
   const [selectedSchool, setSelectedSchool] = useState<string>("");
   const [selectedPrompt, setSelectedPrompt] = useState<string>("");
   const [customPrompt, setCustomPrompt] = useState<string>("");
   const [responses, setResponses] = useState<Record<string, string>>({});
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [isRecording, setIsRecording] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [activeVoiceInput, setActiveVoiceInput] = useState<string | null>(null);
+
+  // Check authentication on component mount
+  useState(() => {
+    getCurrentUser().then(setUser);
+  });
 
   const totalSteps = 4;
   const progress = (step / totalSteps) * 100;
@@ -109,9 +121,25 @@ export default function EssayBuilder() {
     }));
   };
 
-  const toggleRecording = () => {
-    setIsRecording(!isRecording);
-    // TODO: Implement voice recording functionality
+  const toggleVoiceInput = (questionId: string) => {
+    if (activeVoiceInput === questionId) {
+      // Stop recording
+      speechRecognition.stopListening();
+      setActiveVoiceInput(null);
+      
+      // Add transcript to existing response
+      if (speechRecognition.transcript) {
+        const existingResponse = responses[questionId] || '';
+        const newResponse = existingResponse + (existingResponse ? ' ' : '') + speechRecognition.transcript;
+        handleResponseChange(questionId, newResponse);
+        speechRecognition.resetTranscript();
+      }
+    } else {
+      // Start recording
+      speechRecognition.resetTranscript();
+      speechRecognition.startListening();
+      setActiveVoiceInput(questionId);
+    }
   };
 
   const nextStep = () => {
@@ -132,17 +160,47 @@ export default function EssayBuilder() {
 
   const generateEssay = async () => {
     setIsGenerating(true);
-    // TODO: Implement AI essay generation
-    setTimeout(() => {
+    
+    try {
+      const essayContent = await generateEssay({
+        school: SCHOOLS.find(s => s.id === selectedSchool)?.name || selectedSchool,
+        prompt: selectedPrompt || customPrompt,
+        responses,
+        wordLimit: 650
+      });
+
+      // Save essay if user is authenticated
+      if (user) {
+        const essayData = {
+          user_id: user.id,
+          school: SCHOOLS.find(s => s.id === selectedSchool)?.name || selectedSchool,
+          prompt: selectedPrompt || customPrompt,
+          responses,
+          generated_essay: essayContent,
+          is_shared: false
+        };
+
+        const { error } = await saveEssay(essayData);
+        if (error) {
+          console.error('Error saving essay:', error);
+          toast.error("Essay generated but couldn't be saved. Please try again.");
+        }
+      }
+
       setIsGenerating(false);
       navigate("/essay-result", { 
         state: { 
           school: selectedSchool,
           prompt: selectedPrompt || customPrompt,
-          responses 
+          responses,
+          generatedEssay: essayContent
         }
       });
-    }, 3000);
+    } catch (error) {
+      setIsGenerating(false);
+      toast.error("Failed to generate essay. Please check your API key and try again.");
+      console.error('Essay generation error:', error);
+    }
   };
 
   const renderStep1 = () => (
@@ -232,19 +290,42 @@ export default function EssayBuilder() {
           <div className="relative">
             <Textarea
               placeholder={currentQuestion.placeholder}
-              value={responses[currentQuestion.id] || ""}
+              value={
+                (responses[currentQuestion.id] || "") + 
+                (activeVoiceInput === currentQuestion.id ? " " + speechRecognition.transcript : "")
+              }
               onChange={(e) => handleResponseChange(currentQuestion.id, e.target.value)}
               className="min-h-[150px] pr-12"
             />
             <Button
               variant="ghost"
               size="icon"
-              className={`absolute top-2 right-2 ${isRecording ? "text-red-500" : "text-muted-foreground"}`}
-              onClick={toggleRecording}
+              className={`absolute top-2 right-2 ${
+                activeVoiceInput === currentQuestion.id ? "text-red-500" : "text-muted-foreground"
+              }`}
+              onClick={() => toggleVoiceInput(currentQuestion.id)}
+              disabled={!speechRecognition.browserSupportsSpeechRecognition}
+              title={
+                !speechRecognition.browserSupportsSpeechRecognition 
+                  ? "Voice input not supported in this browser" 
+                  : activeVoiceInput === currentQuestion.id 
+                    ? "Stop recording" 
+                    : "Start voice input"
+              }
             >
-              {isRecording ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+              {activeVoiceInput === currentQuestion.id ? (
+                <MicOff className="h-4 w-4" />
+              ) : (
+                <Mic className="h-4 w-4" />
+              )}
             </Button>
           </div>
+          
+          {activeVoiceInput === currentQuestion.id && (
+            <div className="text-sm text-muted-foreground">
+              🎤 Listening... Speak now and your words will be added to your response.
+            </div>
+          )}
 
           <div className="flex justify-between items-center">
             <Button

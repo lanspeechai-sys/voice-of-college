@@ -1,5 +1,56 @@
 # Welcome to your Lovable project
 
+## EssayAI - AI-Powered College Essay Assistant
+
+A comprehensive platform that helps students create compelling college application essays using AI while preserving their authentic voice and personal story.
+
+### 🚀 Features
+
+- **AI Essay Generation**: Powered by OpenAI GPT-4 for high-quality essay creation
+- **Voice Input**: Speech-to-text functionality for natural story sharing
+- **User Authentication**: Secure user accounts with Supabase
+- **Essay Management**: Save, edit, and organize multiple essays
+- **Real-time Collaboration**: Share essays with counselors and mentors
+- **Multiple School Support**: Pre-loaded prompts for top universities
+- **Essay Analysis**: Word count, tone analysis, and authenticity metrics
+- **Export Options**: Download essays in multiple formats
+
+### 🛠️ Setup Instructions
+
+1. **Clone and Install**
+   ```bash
+   git clone <YOUR_GIT_URL>
+   cd <YOUR_PROJECT_NAME>
+   npm install
+   ```
+
+2. **Environment Configuration**
+   - Copy `.env.example` to `.env`
+   - Add your OpenAI API key
+   - Add your Supabase project URL and anon key
+
+3. **Database Setup** (Supabase)
+   - Create a new Supabase project
+   - Run the SQL migrations in `/supabase/migrations/`
+   - Enable Row Level Security (RLS)
+
+4. **Start Development**
+   ```bash
+   npm run dev
+   ```
+
+### 🔧 API Keys Required
+
+- **OpenAI API Key**: For AI essay generation
+- **Supabase Project**: For user authentication and data storage
+
+### 📱 Key Pages
+
+- `/` - Landing page with features and pricing
+- `/essay-builder` - Multi-step essay creation wizard
+- `/essay-result` - Essay display, editing, and sharing
+- `/dashboard` - User dashboard with saved essays
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/ebf0079e-e688-4e7a-b387-8e57878c56ed

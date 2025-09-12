@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { improveEssay } from "@/lib/openai";
+import { updateEssay, getCurrentUser } from "@/lib/supabase";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -7,33 +9,75 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Download, Share2, Edit3, Users, CheckCircle, Copy } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
+import { v4 as uuidv4 } from 'uuid';
 
 export default function EssayResult() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { school, prompt, responses } = location.state || {};
+  const { school, prompt, responses, generatedEssay, savedEssay, essayId } = location.state || {};
   
-  const [essay, setEssay] = useState(`The moment I stepped into my grandmother's kitchen, the aroma of cardamom and cinnamon transported me to a world where tradition and innovation danced together. As I watched her weathered hands expertly fold samosas, I realized that this wasn't just cooking—it was storytelling, cultural preservation, and the embodiment of resilience that has shaped my identity.
 
-Growing up in a bicultural household, I often felt caught between two worlds. My Pakistani heritage, rich with traditions and values, sometimes seemed at odds with my American upbringing. However, it was through my grandmother's stories and my mother's adaptations of our family recipes that I began to understand how these two cultures could complement rather than compete with each other.
 
-This realization sparked my passion for cultural anthropology and food studies. I began documenting family recipes, not just as instructions for cooking, but as narratives of migration, adaptation, and identity. Each dish told a story: the way my mother substituted ingredients based on what was available in American grocery stores, how my father's business acumen influenced our family's approach to hospitality, and how my younger siblings and I created fusion dishes that reflected our unique American-Pakistani experience.
 
-My interest in preserving and sharing these stories led me to start a blog called "Flavors of Heritage," where I interview immigrant families about their food traditions and the ways they've adapted to life in America. What began as a personal project has grown into a platform that has reached thousands of readers and connected families across different cultures who share similar experiences of navigating multiple identities.
 
-Through this work, I've learned that authenticity doesn't mean remaining unchanged—it means staying true to your core values while allowing yourself to grow and adapt. This lesson has influenced every aspect of my life, from my academic pursuits to my leadership roles in student organizations.
 
-As I look toward my future at Harvard, I'm excited to bring this perspective to campus. I want to continue exploring how cultural identity shapes individual and community experiences, and I'm particularly interested in Harvard's Food and Society program. I believe that food serves as a universal language that can bridge differences and create understanding between diverse communities.
 
-My grandmother's kitchen taught me that the most meaningful traditions are those that evolve while maintaining their essence. I hope to bring this same spirit of thoughtful adaptation and cultural bridge-building to the Harvard community, contributing to conversations about identity, belonging, and the beautiful complexity of the American experience.`);
+  const [essay, setEssay] = useState(generatedEssay || savedEssay || "");
 
   const [feedback, setFeedback] = useState("");
   const [isEditing, setIsEditing] = useState(false);
+  const [isImproving, setIsImproving] = useState(false);
+  const [user, setUser] = useState<any>(null);
+
+  // Check authentication and load user
+  useState(() => {
+    getCurrentUser().then(setUser);
+  });
 
   if (!school || !prompt || !responses) {
     navigate("/essay-builder");
     return null;
   }
+
+  const handleSaveChanges = async () => {
+    if (user && essayId) {
+      try {
+        const { error } = await updateEssay(essayId, { generated_essay: essay });
+        if (error) {
+          toast.error("Failed to save changes");
+        } else {
+          toast.success("Essay saved successfully!");
+        }
+      } catch (error) {
+        toast.error("Failed to save changes");
+      }
+    }
+    setIsEditing(false);
+  };
+
+  const handleImproveEssay = async () => {
+    if (!feedback.trim()) {
+      toast.error("Please provide feedback for improvement");
+      return;
+    }
+
+    setIsImproving(true);
+    try {
+      const improvedEssay = await improveEssay(essay, feedback);
+      setEssay(improvedEssay);
+      setFeedback("");
+      toast.success("Essay improved based on your feedback!");
+      
+      // Save improved essay if user is authenticated
+      if (user && essayId) {
+        await updateEssay(essayId, { generated_essay: improvedEssay });
+      }
+    } catch (error) {
+      toast.error("Failed to improve essay. Please try again.");
+    } finally {
+      setIsImproving(false);
+    }
+  };
 
   const handleCopyEssay = () => {
     navigator.clipboard.writeText(essay);
@@ -44,7 +88,7 @@ My grandmother's kitchen taught me that the most meaningful traditions are those
     const element = document.createElement("a");
     const file = new Blob([essay], { type: "text/plain" });
     element.href = URL.createObjectURL(file);
-    element.download = "college-essay.txt";
+    element.download = `${school.replace(/\s+/g, '-')}-essay.txt`;
     document.body.appendChild(element);
     element.click();
     document.body.removeChild(element);
@@ -58,7 +102,10 @@ My grandmother's kitchen taught me that the most meaningful traditions are those
         text: essay,
       });
     } else {
-      handleCopyEssay();
+      // Generate shareable link
+      const shareToken = uuidv4();
+      // TODO: Implement sharing with token
+      toast.success("Sharing feature coming soon!");
     }
   };
 
@@ -129,7 +176,7 @@ My grandmother's kitchen taught me that the most meaningful traditions are those
                       className="min-h-[500px] font-serif text-base leading-relaxed"
                     />
                     <div className="flex gap-2">
-                      <Button onClick={() => setIsEditing(false)}>
+                      <Button onClick={handleSaveChanges}>
                         Save Changes
                       </Button>
                       <Button variant="outline" onClick={() => setIsEditing(false)}>
@@ -176,12 +223,16 @@ My grandmother's kitchen taught me that the most meaningful traditions are those
                   onChange={(e) => setFeedback(e.target.value)}
                   className="min-h-[100px]"
                 />
-                <div className="mt-4 flex gap-2">
-                  <Button variant="outline" size="sm">
-                    Share with Counselor
+                <div className="mt-4 flex gap-2 flex-wrap">
+                  <Button 
+                    onClick={handleImproveEssay}
+                    disabled={isImproving || !feedback.trim()}
+                    size="sm"
+                  >
+                    {isImproving ? "Improving..." : "Improve Essay"}
                   </Button>
-                  <Button variant="outline" size="sm">
-                    Request Peer Review
+                  <Button variant="outline" size="sm" onClick={handleShare}>
+                    Share with Counselor
                   </Button>
                 </div>
               </CardContent>
