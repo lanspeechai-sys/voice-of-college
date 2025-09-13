@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { generateEssay as generateEssayFromOpenAI } from "@/lib/openai";
+import { generateEssay as generateEssayFromGemini } from "@/lib/gemini";
 import { saveEssay, getCurrentUser, checkUsageLimit, incrementUserUsage, trackUsage } from "@/lib/supabase";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { toast } from "@/components/ui/sonner";
@@ -182,7 +182,7 @@ export default function EssayBuilder() {
     setIsGenerating(true);
     
     try {
-      const essayContent = await generateEssayFromOpenAI({
+      const essayContent = await generateEssayFromGemini({
         school: SCHOOLS.find(s => s.id === selectedSchool)?.name || selectedSchool,
         prompt: selectedPrompt || customPrompt,
         responses,
