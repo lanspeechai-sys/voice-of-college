@@ -5,10 +5,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
 import { signIn, signUp, getCurrentUser } from "@/lib/supabase";
 import { toast } from "@/components/ui/sonner";
-import { Loader2, GraduationCap, Sparkles, Check } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -86,188 +85,105 @@ export default function Auth() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background">
       <Header />
-      <div className="w-full max-w-4xl grid lg:grid-cols-2 gap-8 items-center">
-        {/* Left Side - Branding & Plan Selection */}
-        <div className="space-y-8">
-          <div className="text-center lg:text-left">
-            <div className="flex items-center justify-center lg:justify-start gap-2 mb-4">
-              <div className="relative">
-                <GraduationCap className="h-10 w-10 text-primary" />
-                <Sparkles className="h-5 w-5 text-secondary absolute -top-1 -right-1" />
-              </div>
-              <span className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                EssayAI
-              </span>
-            </div>
-            <h1 className="text-3xl font-bold mb-2">
-              Join Thousands of Students
-            </h1>
-            <p className="text-muted-foreground">
-              Create compelling college essays with AI that bypasses detection systems
-            </p>
-          </div>
-
-          {/* Free Plan Info */}
-          <Card className="border-primary/20">
-            <CardHeader>
-              <CardTitle className="text-lg">Start Free</CardTitle>
-              <CardDescription>No payment required to get started</CardDescription>
+      <div className="pt-24 pb-16 flex items-center justify-center min-h-[calc(100vh-6rem)]">
+        <div className="w-full max-w-md mx-auto px-4">
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle>Welcome to EssayAI</CardTitle>
+              <CardDescription>
+                Sign in to your account or create a new one
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="p-4 rounded-lg border border-primary bg-primary/5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="font-medium">Free Plan</h3>
-                    <p className="text-sm text-muted-foreground">$0 - No credit card required</p>
-                  </div>
-                  <div className="text-right text-sm">
-                    <p>1 free essay</p>
-                    <p>0 human reviews</p>
-                  </div>
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground mt-3">
-                Upgrade anytime when you need more essays or human reviews
-              </p>
+              <Tabs defaultValue="signup" className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="signup">Sign Up</TabsTrigger>
+                  <TabsTrigger value="signin">Sign In</TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="signup" className="space-y-4 mt-6">
+                  <form onSubmit={handleSignUp} className="space-y-4">
+                    <div>
+                      <Label htmlFor="signup-name">Full Name</Label>
+                      <Input
+                        id="signup-name"
+                        type="text"
+                        value={formData.fullName}
+                        onChange={(e) => handleInputChange('fullName', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="signup-email">Email</Label>
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="signup-password">Password</Label>
+                      <Input
+                        id="signup-password"
+                        type="password"
+                        value={formData.password}
+                        onChange={(e) => handleInputChange('password', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="signup-confirm">Confirm Password</Label>
+                      <Input
+                        id="signup-confirm"
+                        type="password"
+                        value={formData.confirmPassword}
+                        onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                        required
+                      />
+                    </div>
+                    
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Create Account
+                    </Button>
+                  </form>
+                </TabsContent>
+
+                <TabsContent value="signin" className="space-y-4 mt-6">
+                  <form onSubmit={handleSignIn} className="space-y-4">
+                    <div>
+                      <Label htmlFor="signin-email">Email</Label>
+                      <Input
+                        id="signin-email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => handleInputChange('email', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="signin-password">Password</Label>
+                      <Input
+                        id="signin-password"
+                        type="password"
+                        value={formData.password}
+                        onChange={(e) => handleInputChange('password', e.target.value)}
+                        required
+                      />
+                    </div>
+                    <Button type="submit" className="w-full" disabled={isLoading}>
+                      {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                      Sign In
+                    </Button>
+                  </form>
+                </TabsContent>
+              </Tabs>
             </CardContent>
           </Card>
-
-          {/* Features */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <Check className="h-5 w-5 text-green-500" />
-              <span className="text-sm">AI essays that bypass detection systems</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Check className="h-5 w-5 text-green-500" />
-              <span className="text-sm">Voice input for natural storytelling</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Check className="h-5 w-5 text-green-500" />
-              <span className="text-sm">Professional human reviews available</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <Check className="h-5 w-5 text-green-500" />
-              <span className="text-sm">Secure essay storage and sharing</span>
-            </div>
-          </div>
-        </div>
-
-        {/* Right Side - Auth Forms */}
-        <Card className="w-full max-w-md mx-auto">
-          <CardHeader className="text-center">
-            <CardTitle>Get Started</CardTitle>
-            <CardDescription>
-              Create your free account to start writing essays
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="signup" className="w-full">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="signup">Sign Up</TabsTrigger>
-                <TabsTrigger value="signin">Sign In</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="signup" className="space-y-4 mt-6">
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div>
-                    <Label htmlFor="signup-name">Full Name</Label>
-                    <Input
-                      id="signup-name"
-                      type="text"
-                      value={formData.fullName}
-                      onChange={(e) => handleInputChange('fullName', e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="signup-email">Email</Label>
-                    <Input
-                      id="signup-email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="signup-password">Password</Label>
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      value={formData.password}
-                      onChange={(e) => handleInputChange('password', e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="signup-confirm">Confirm Password</Label>
-                    <Input
-                      id="signup-confirm"
-                      type="password"
-                      value={formData.confirmPassword}
-                      onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
-                      required
-                    />
-                  </div>
-                  
-                  <div className="p-3 bg-muted/50 rounded-lg">
-                    <p className="text-xs text-muted-foreground">
-                      By signing up, you agree to our Terms of Service and Privacy Policy. 
-                      You'll start with our <strong>Free Plan</strong> - no payment required.
-                    </p>
-                  </div>
-
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Create Free Account
-                  </Button>
-                </form>
-              </TabsContent>
-
-              <TabsContent value="signin" className="space-y-4 mt-6">
-                <form onSubmit={handleSignIn} className="space-y-4">
-                  <div>
-                    <Label htmlFor="signin-email">Email</Label>
-                    <Input
-                      id="signin-email"
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="signin-password">Password</Label>
-                    <Input
-                      id="signin-password"
-                      type="password"
-                      value={formData.password}
-                      onChange={(e) => handleInputChange('password', e.target.value)}
-                      required
-                    />
-                  </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
-                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Sign In
-                  </Button>
-                </form>
-              </TabsContent>
-            </Tabs>
-
-            <div className="mt-6 text-center">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                onClick={() => navigate('/pricing')}
-              >
-                View All Plans & Pricing
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
       </div>
       <Footer />
     </div>
