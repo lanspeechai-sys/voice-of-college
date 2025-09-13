@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { signIn, signUp, getCurrentUser } from "@/lib/supabase";
 import { toast } from "@/components/ui/sonner";
 import { Loader2, GraduationCap, Sparkles, Check } from "lucide-react";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const planDetails = {
   free: { name: 'Free Plan', price: '$0', essays: 1, reviews: 0 },
@@ -109,6 +111,7 @@ export default function Auth() {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
+      <Header />
       <div className="w-full max-w-4xl grid lg:grid-cols-2 gap-8 items-center">
         {/* Left Side - Branding & Plan Selection */}
         <div className="space-y-8">
@@ -304,6 +307,7 @@ export default function Auth() {
           </CardContent>
         </Card>
       </div>
+      <Footer />
     </div>
   );
 }

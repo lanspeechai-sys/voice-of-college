@@ -43,7 +43,7 @@ export const useSpeechRecognition = (): UseSpeechRecognitionReturn => {
         }
       }
 
-      setTranscript(finalTranscript + interimTranscript);
+      setTranscript(prev => prev + finalTranscript + interimTranscript);
     };
 
     recognition.onend = () => {
@@ -66,6 +66,23 @@ export const useSpeechRecognition = (): UseSpeechRecognitionReturn => {
 
     const newRecognition = initializeRecognition();
     if (newRecognition) {
+      setRecognition(newRecognition);
+      newRecognition.start();
+    }
+  }, [browserSupportsSpeechRecognition, initializeRecognition]);
+
+  const startListening = useCallback((options?: { continuous?: boolean }) => {
+    if (!browserSupportsSpeechRecognition) {
+      alert('Your browser does not support speech recognition. Please use Chrome or Safari.');
+      return;
+    }
+
+    const newRecognition = initializeRecognition();
+    if (newRecognition) {
+      if (options?.continuous) {
+        newRecognition.continuous = true;
+        newRecognition.interimResults = true;
+      }
       setRecognition(newRecognition);
       newRecognition.start();
     }

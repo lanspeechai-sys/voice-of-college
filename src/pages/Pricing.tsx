@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Check, Star, Zap, Crown, Users } from "lucide-react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { toast } from "@/components/ui/sonner";
 
 const plans = [
@@ -278,6 +279,7 @@ export default function Pricing() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

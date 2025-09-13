@@ -11,6 +11,7 @@ import { ArrowLeft, Download, Share2, Edit3, Users, CheckCircle, Copy } from "lu
 import { toast } from "@/components/ui/sonner";
 import { v4 as uuidv4 } from 'uuid';
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default function EssayResult() {
   const location = useLocation();
@@ -337,6 +338,7 @@ export default function EssayResult() {
         </div>
       </div>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { Plus, FileText, Calendar, School, Edit3, Trash2, Share2 } from "lucide-
 import { getCurrentUser, getUserEssays, Essay } from "@/lib/supabase";
 import { toast } from "@/components/ui/sonner";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -175,6 +176,7 @@ export default function Dashboard() {
           )}
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

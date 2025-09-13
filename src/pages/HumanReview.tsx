@@ -9,6 +9,7 @@ import { ArrowLeft, Users, Clock, CheckCircle, AlertCircle } from "lucide-react"
 import { getCurrentUser, getUserEssays, updateEssay, Essay } from "@/lib/supabase";
 import { toast } from "@/components/ui/sonner";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 export default function HumanReview() {
   const navigate = useNavigate();
@@ -302,6 +303,7 @@ export default function HumanReview() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

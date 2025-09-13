@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, Mic, MicOff, School, FileText, Users, Sparkles } from "lucide-react";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { v4 as uuidv4 } from 'uuid';
 
 interface SchoolOption {
@@ -126,19 +127,21 @@ export default function EssayBuilder() {
     if (activeVoiceInput === questionId) {
       // Stop recording
       speechRecognition.stopListening();
-      setActiveVoiceInput(null);
       
       // Add transcript to existing response
       if (speechRecognition.transcript) {
         const existingResponse = responses[questionId] || '';
         const newResponse = existingResponse + (existingResponse ? ' ' : '') + speechRecognition.transcript;
         handleResponseChange(questionId, newResponse);
-        speechRecognition.resetTranscript();
       }
+      
+      // Reset and clear
+      speechRecognition.resetTranscript();
+      setActiveVoiceInput(null);
     } else {
       // Start recording
       speechRecognition.resetTranscript();
-      speechRecognition.startListening();
+      speechRecognition.startListening({ continuous: true });
       setActiveVoiceInput(questionId);
     }
   };
@@ -296,13 +299,17 @@ export default function EssayBuilder() {
                 (activeVoiceInput === currentQuestion.id ? " " + speechRecognition.transcript : "")
               }
               onChange={(e) => handleResponseChange(currentQuestion.id, e.target.value)}
-              className="min-h-[150px] pr-12"
+              className="min-h-[150px] pr-16"
             />
             <Button
               variant="ghost"
-              size="icon"
-              className={`absolute top-2 right-2 ${
+              size="sm"
+              className={`absolute top-3 right-3 h-10 w-10 rounded-full ${
                 activeVoiceInput === currentQuestion.id ? "text-red-500" : "text-muted-foreground"
+              } ${
+                activeVoiceInput === currentQuestion.id ? "bg-red-50 hover:bg-red-100" : "bg-gray-50 hover:bg-gray-100"
+              } border-2 ${
+                activeVoiceInput === currentQuestion.id ? "border-red-200" : "border-gray-200"
               }`}
               onClick={() => toggleVoiceInput(currentQuestion.id)}
               disabled={!speechRecognition.browserSupportsSpeechRecognition}
@@ -315,16 +322,19 @@ export default function EssayBuilder() {
               }
             >
               {activeVoiceInput === currentQuestion.id ? (
-                <MicOff className="h-4 w-4" />
+                <MicOff className="h-5 w-5" />
               ) : (
-                <Mic className="h-4 w-4" />
+                <Mic className="h-5 w-5" />
               )}
             </Button>
           </div>
           
           {activeVoiceInput === currentQuestion.id && (
-            <div className="text-sm text-muted-foreground">
-              🎤 Listening... Speak now and your words will be added to your response.
+            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+              <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+              <span className="text-sm text-red-700 font-medium">
+                Recording... Speak clearly and your words will be added to your response.
+              </span>
             </div>
           )}
 
@@ -486,6 +496,7 @@ export default function EssayBuilder() {
         </div>
       </div>
       </div>
+      <Footer />
     </div>
   );
 }
