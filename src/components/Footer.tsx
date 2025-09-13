@@ -23,30 +23,30 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Product</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-primary transition-colors">How it Works</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Features</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Pricing</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">FAQ</a></li>
+              <li><a href="/#how-it-works" className="hover:text-primary transition-colors">How it Works</a></li>
+              <li><a href="/#features" className="hover:text-primary transition-colors">Features</a></li>
+              <li><a href="/pricing" className="hover:text-primary transition-colors">Pricing</a></li>
+              <li><a href="/auth" className="hover:text-primary transition-colors">Get Started</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-semibold mb-4">Support</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Contact Us</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Community</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Blog</a></li>
+              <li><a href="mailto:support@essayai.com" className="hover:text-primary transition-colors">Contact Support</a></li>
+              <li><a href="/pricing" className="hover:text-primary transition-colors">Plans & Pricing</a></li>
+              <li><a href="/auth" className="hover:text-primary transition-colors">Sign Up</a></li>
+              <li><a href="/dashboard" className="hover:text-primary transition-colors">Dashboard</a></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-semibold mb-4">Legal</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-primary transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Cookie Policy</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Academic Integrity</a></li>
+              <li><a href="/privacy" className="hover:text-primary transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms" className="hover:text-primary transition-colors">Terms of Service</a></li>
+              <li><a href="/refunds" className="hover:text-primary transition-colors">Refund Policy</a></li>
+              <li><a href="/academic-integrity" className="hover:text-primary transition-colors">Academic Integrity</a></li>
             </ul>
           </div>
         </div>

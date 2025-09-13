@@ -15,6 +15,10 @@ export interface EssayGenerationRequest {
 export async function generateEssay(request: EssayGenerationRequest): Promise<string> {
   const { school, prompt, responses, wordLimit = 650 } = request;
   
+  if (!import.meta.env.VITE_OPENAI_API_KEY) {
+    throw new Error('OpenAI API key is not configured. Please check your environment variables.');
+  }
+  
   const systemPrompt = `You are an expert college admissions essay writer and human writing specialist. Your task is to create compelling, authentic college application essays that are indistinguishable from human writing and will pass all AI detection systems including Turnitin, ZeroGPT, and Grammarly AI Checker. 
 
 CRITICAL REQUIREMENTS:
@@ -66,6 +70,10 @@ Create an essay that weaves together these elements into a compelling narrative 
 }
 
 export async function improveEssay(originalEssay: string, feedback: string): Promise<string> {
+  if (!import.meta.env.VITE_OPENAI_API_KEY) {
+    throw new Error('OpenAI API key is not configured. Please check your environment variables.');
+  }
+  
   const systemPrompt = `You are an expert college admissions essay editor and human writing specialist. Improve the given essay based on the feedback provided while maintaining completely natural, human-like writing that will pass all AI detection systems. Ensure the improved essay feels authentic and personal while addressing the feedback.`;
 
   const userPrompt = `Please improve this essay based on the feedback:

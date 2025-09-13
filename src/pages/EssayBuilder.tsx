@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, Mic, MicOff, School, FileText, Users, Sparkles } from "lucide-react";
+import Header from "@/components/Header";
 import { v4 as uuidv4 } from 'uuid';
 
 interface SchoolOption {
@@ -434,16 +435,18 @@ export default function EssayBuilder() {
   );
 
   return (
-    <div className="min-h-screen bg-background py-8">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="pt-24 pb-8">
       <div className="container mx-auto px-4">
         <div className="mb-8">
           <Button
             variant="ghost"
-            onClick={() => navigate("/")}
+            onClick={() => navigate(-1)}
             className="mb-4"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Home
+            Back
           </Button>
           
           <div className="max-w-2xl mx-auto">
@@ -481,6 +484,7 @@ export default function EssayBuilder() {
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
+      </div>
       </div>
     </div>
   );

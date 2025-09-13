@@ -10,6 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Download, Share2, Edit3, Users, CheckCircle, Copy } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
 import { v4 as uuidv4 } from 'uuid';
+import Header from "@/components/Header";
 
 export default function EssayResult() {
   const location = useLocation();
@@ -112,16 +113,18 @@ export default function EssayResult() {
   const wordCount = essay.split(/\s+/).filter(word => word.length > 0).length;
 
   return (
-    <div className="min-h-screen bg-background py-8">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="pt-24 pb-8">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="mb-8">
           <Button
             variant="ghost"
-            onClick={() => navigate("/essay-builder")}
+            onClick={() => navigate(-1)}
             className="mb-4"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Builder
+            Back
           </Button>
           
           <div className="text-center">
@@ -332,6 +335,7 @@ export default function EssayResult() {
             </Card>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );
