@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Check, Zap, Crown, AlertTriangle } from 'lucide-react';
 import { STRIPE_PRODUCTS } from '@/stripe-config';
-import { getCurrentUser } from '@/lib/supabase';
+import { getCurrentUser, supabase } from '@/lib/supabase';
 import { toast } from '@/components/ui/sonner';
 
 interface UpgradeModalProps {
@@ -28,13 +28,20 @@ export default function UpgradeModal({ isOpen, onClose, actionType, remaining }:
         return;
       }
 
+      // Get the user's session token
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        toast.error('Authentication required. Please sign in again.');
+        return;
+      }
+
       const product = STRIPE_PRODUCTS[productKey];
       const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-checkout`;
       
       const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+          'Authorization': `Bearer ${session.access_token}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
