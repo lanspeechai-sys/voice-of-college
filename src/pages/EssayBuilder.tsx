@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { generateEssay } from "@/lib/openai";
+import { generateEssay as generateEssayFromOpenAI } from "@/lib/openai";
 import { saveEssay, getCurrentUser } from "@/lib/supabase";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { toast } from "@/components/ui/sonner";
@@ -162,11 +162,11 @@ export default function EssayBuilder() {
   const canProceedFromStep2 = responses[QUESTIONS[currentQuestionIndex]?.id]?.trim().length > 0;
   const allQuestionsAnswered = QUESTIONS.every(q => responses[q.id]?.trim().length > 0);
 
-  const generateEssay = async () => {
+  const handleGenerateEssay = async () => {
     setIsGenerating(true);
     
     try {
-      const essayContent = await generateEssay({
+      const essayContent = await generateEssayFromOpenAI({
         school: SCHOOLS.find(s => s.id === selectedSchool)?.name || selectedSchool,
         prompt: selectedPrompt || customPrompt,
         responses,
@@ -427,6 +427,7 @@ export default function EssayBuilder() {
               </p>
             </div>
             <Button onClick={generateEssay} size="lg" className="w-full">
+            <Button onClick={handleGenerateEssay} size="lg" className="w-full">
               Generate My Essay
               <Sparkles className="ml-2 h-5 w-5" />
             </Button>
