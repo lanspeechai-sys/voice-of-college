@@ -16,7 +16,7 @@ import Footer from "@/components/Footer";
 export default function EssayResult() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { school, prompt, responses, generatedEssay, savedEssay, essayId } = location.state || {};
+  const { school, prompt, responses, generatedEssay, savedEssay, essayId, humanFeedback } = location.state || {};
   
 
 
@@ -210,6 +210,54 @@ export default function EssayResult() {
               </CardContent>
             </Card>
 
+            {/* Human Feedback Section */}
+            {humanFeedback && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-500" />
+                    Professional Feedback
+                  </CardTitle>
+                  <CardDescription>
+                    Detailed review from our admissions counselors
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="prose prose-sm max-w-none">
+                      <p className="whitespace-pre-wrap text-sm leading-relaxed text-green-800">
+                        {humanFeedback}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => navigate('/human-review', { 
+                        state: { 
+                          preselectedEssay: essayId,
+                          essayData: { school, prompt, essay }
+                        }
+                      })}
+                    >
+                      Request Another Review
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => {
+                        navigator.clipboard.writeText(humanFeedback);
+                        toast.success("Feedback copied to clipboard!");
+                      }}
+                    >
+                      Copy Feedback
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -238,6 +286,7 @@ export default function EssayResult() {
                   <Button 
                     variant="outline" 
                     className="w-full"
+                    disabled={!!humanFeedback}
                     onClick={() => navigate('/human-review', { 
                       state: { 
                         preselectedEssay: essayId,
@@ -246,7 +295,7 @@ export default function EssayResult() {
                     })}
                   >
                     <Users className="h-4 w-4 mr-2" />
-                    Submit for Human Review ($5)
+                    {humanFeedback ? 'Review Completed' : 'Submit for Human Review ($5)'}
                   </Button>
                 </div>
               </CardContent>

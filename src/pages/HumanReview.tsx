@@ -233,7 +233,8 @@ export default function HumanReview() {
               <CardContent>
                 <div className="space-y-3">
                   {essays.filter(e => e.review_status).map((essay) => (
-                    <div key={essay.id} className="flex items-center justify-between p-3 border rounded-lg">
+                  <Card key={essay.id} className="p-3">
+                    <div className="flex items-center justify-between mb-2">
                       <div>
                         <p className="font-medium text-sm">{essay.school}</p>
                         <p className="text-xs text-muted-foreground">
@@ -242,6 +243,32 @@ export default function HumanReview() {
                       </div>
                       {getReviewStatusBadge(essay.review_status)}
                     </div>
+                    
+                    {/* Show feedback if review is completed */}
+                    {essay.review_status === 'completed' && essay.human_review && (
+                      <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <h4 className="text-sm font-medium text-green-800 mb-2">Professional Feedback:</h4>
+                        <p className="text-sm text-green-700 whitespace-pre-wrap">{essay.human_review}</p>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="mt-2"
+                          onClick={() => navigate('/essay-result', { 
+                            state: { 
+                              school: essay.school,
+                              prompt: essay.prompt,
+                              responses: essay.responses,
+                              savedEssay: essay.generated_essay,
+                              essayId: essay.id,
+                              humanFeedback: essay.human_review
+                            }
+                          })}
+                        >
+                          View Essay with Feedback
+                        </Button>
+                      </div>
+                    )}
+                  </Card>
                   ))}
                   {essays.filter(e => e.review_status).length === 0 && (
                     <p className="text-sm text-muted-foreground text-center py-4">

@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import HumanReview from "./pages/HumanReview";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
+import ReviewerDashboard from "./pages/ReviewerDashboard";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -49,6 +50,11 @@ const App = () => (
           <Route path="/human-review" element={
             <ProtectedRoute>
               <HumanReview />
+            </ProtectedRoute>
+          } />
+          <Route path="/reviewer-dashboard" element={
+            <ProtectedRoute>
+              <ReviewerDashboard />
             </ProtectedRoute>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

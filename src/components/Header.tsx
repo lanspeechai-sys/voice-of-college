@@ -77,6 +77,9 @@ const Header = () => {
               <Button variant="ghost" size="sm" onClick={() => navigate("/human-review")}>
                 Human Review
               </Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/reviewer-dashboard")}>
+                Reviewer
+              </Button>
               <Button variant="ghost" size="sm" onClick={handleSignOut}>
                 Sign Out
               </Button>
@@ -134,6 +137,9 @@ const Header = () => {
                       </Button>
                       <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/human-review")}>
                         Human Review
+                      </Button>
+                      <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/reviewer-dashboard")}>
+                        Reviewer Dashboard
                       </Button>
                       <Button variant="ghost" className="w-full justify-start" onClick={handleSignOut}>
                         Sign Out
