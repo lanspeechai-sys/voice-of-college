@@ -52,7 +52,7 @@ const Header = () => {
             <Sparkles className="h-4 w-4 text-secondary absolute -top-1 -right-1" />
           </div>
           <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            EssayAI
+            Splennet
           </span>
         </div>
         

@@ -82,7 +82,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Welcome to EssayAI</DialogTitle>
+          <DialogTitle>Welcome to Splennet</DialogTitle>
           <DialogDescription>
             Sign in to save your essays and access all features
           </DialogDescription>

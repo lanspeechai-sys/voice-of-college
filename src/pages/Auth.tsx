@@ -75,6 +75,7 @@ export default function Auth() {
         toast.error(error.message);
       } else {
         toast.success("Welcome to EssayAI! You can start with 1 free essay.");
+        toast.success("Welcome to Splennet! You can start with 1 free essay.");
         navigate('/dashboard');
       }
     } catch (error) {
@@ -91,7 +92,7 @@ export default function Auth() {
         <div className="w-full max-w-md mx-auto px-4">
           <Card>
             <CardHeader className="text-center">
-              <CardTitle>Welcome to EssayAI</CardTitle>
+              <CardTitle>Welcome to Splennet</CardTitle>
               <CardDescription>
                 Sign in to your account or create a new one
               </CardDescription>

@@ -12,7 +12,7 @@ const Footer = () => {
                 <Sparkles className="h-4 w-4 text-secondary absolute -top-1 -right-1" />
               </div>
               <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-                EssayAI
+                Splennet
               </span>
             </div>
             <p className="text-muted-foreground text-sm">
@@ -52,7 +52,7 @@ const Footer = () => {
         </div>
 
         <div className="mt-8 pt-8 border-t border-border text-center text-sm text-muted-foreground">
-          <p>&copy; 2024 EssayAI. All rights reserved. Built to help students succeed ethically.</p>
+          <p>&copy; 2024 Splennet. All rights reserved. Built to help students succeed ethically.</p>
         </div>
       </div>
     </footer>

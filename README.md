@@ -1,6 +1,6 @@
 # Welcome to your Lovable project
 
-## EssayAI - AI-Powered College Essay Assistant
+## Splennet - AI-Powered College Essay Assistant
 
 A comprehensive platform that helps students create compelling college application essays using AI while preserving their authentic voice and personal story.
 

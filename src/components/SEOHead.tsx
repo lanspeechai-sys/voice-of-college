@@ -9,7 +9,7 @@ interface SEOHeadProps {
 }
 
 export default function SEOHead({
-  title = "EssayAI - AI-Powered College Essay Assistant",
+  title = "Splennet - AI-Powered College Essay Assistant",
   description = "Create compelling college application essays in minutes with AI that preserves your unique voice. Get into your dream school with personalized, authentic essays.",
   keywords = "college essay, application essay, AI essay writer, college admissions, essay assistant, college applications",
   image = "https://lovable.dev/opengraph-image-p98pqg.png",
@@ -20,7 +20,7 @@ export default function SEOHead({
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
-      <meta name="author" content="EssayAI" />
+      <meta name="author" content="Splennet" />
       
       {/* Open Graph */}
       <meta property="og:title" content={title} />
