@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -14,6 +14,7 @@ import UpgradeModal from "@/components/UpgradeModal";
 
 export default function HumanReview() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [essays, setEssays] = useState<Essay[]>([]);
   const [selectedEssay, setSelectedEssay] = useState<string>("");
   const [reviewInstructions, setReviewInstructions] = useState("");
@@ -24,6 +25,11 @@ export default function HumanReview() {
 
   useEffect(() => {
     loadData();
+    
+    // Check if essay was preselected from EssayResult page
+    if (location.state?.preselectedEssay) {
+      setSelectedEssay(location.state.preselectedEssay);
+    }
   }, []);
 
   const loadData = async () => {
