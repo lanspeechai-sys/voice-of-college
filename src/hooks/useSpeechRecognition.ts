@@ -58,19 +58,6 @@ export const useSpeechRecognition = (): UseSpeechRecognitionReturn => {
     return recognition;
   }, [browserSupportsSpeechRecognition]);
 
-  const startListening = useCallback(() => {
-    if (!browserSupportsSpeechRecognition) {
-      alert('Your browser does not support speech recognition. Please use Chrome or Safari.');
-      return;
-    }
-
-    const newRecognition = initializeRecognition();
-    if (newRecognition) {
-      setRecognition(newRecognition);
-      newRecognition.start();
-    }
-  }, [browserSupportsSpeechRecognition, initializeRecognition]);
-
   const startListening = useCallback((options?: { continuous?: boolean }) => {
     if (!browserSupportsSpeechRecognition) {
       alert('Your browser does not support speech recognition. Please use Chrome or Safari.');
