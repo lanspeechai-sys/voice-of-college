@@ -426,7 +426,6 @@ export default function EssayBuilder() {
                 We'll use your responses to generate an authentic, compelling essay that captures your unique voice and story.
               </p>
             </div>
-            <Button onClick={generateEssay} size="lg" className="w-full">
             <Button onClick={handleGenerateEssay} size="lg" className="w-full">
               Generate My Essay
               <Sparkles className="ml-2 h-5 w-5" />
@@ -449,53 +448,53 @@ export default function EssayBuilder() {
     <div className="min-h-screen bg-background">
       <Header />
       <div className="pt-24 pb-8">
-      <div className="container mx-auto px-4">
-        <div className="mb-8">
-          <Button
-            variant="ghost"
-            onClick={() => navigate(-1)}
-            className="mb-4"
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back
-          </Button>
-          
-          <div className="max-w-2xl mx-auto">
-            <Progress value={progress} className="mb-4" />
-            <p className="text-center text-sm text-muted-foreground">
-              Step {step} of {totalSteps}
-            </p>
+        <div className="container mx-auto px-4">
+          <div className="mb-8">
+            <Button
+              variant="ghost"
+              onClick={() => navigate(-1)}
+              className="mb-4"
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back
+            </Button>
+            
+            <div className="max-w-2xl mx-auto">
+              <Progress value={progress} className="mb-4" />
+              <p className="text-center text-sm text-muted-foreground">
+                Step {step} of {totalSteps}
+              </p>
+            </div>
+          </div>
+
+          {step === 1 && renderStep1()}
+          {step === 2 && renderStep2()}
+          {step === 3 && renderStep3()}
+          {step === 4 && renderStep4()}
+
+          <div className="flex justify-between max-w-2xl mx-auto mt-8">
+            <Button
+              variant="outline"
+              onClick={prevStep}
+              disabled={step === 1}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Previous
+            </Button>
+            
+            <Button
+              onClick={nextStep}
+              disabled={
+                step === totalSteps ||
+                (step === 1 && !canProceedFromStep1) ||
+                (step === 2 && !allQuestionsAnswered)
+              }
+            >
+              Next
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
           </div>
         </div>
-
-        {step === 1 && renderStep1()}
-        {step === 2 && renderStep2()}
-        {step === 3 && renderStep3()}
-        {step === 4 && renderStep4()}
-
-        <div className="flex justify-between max-w-2xl mx-auto mt-8">
-          <Button
-            variant="outline"
-            onClick={prevStep}
-            disabled={step === 1}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Previous
-          </Button>
-          
-          <Button
-            onClick={nextStep}
-            disabled={
-              step === totalSteps ||
-              (step === 1 && !canProceedFromStep1) ||
-              (step === 2 && !allQuestionsAnswered)
-            }
-          >
-            Next
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
-      </div>
       </div>
       <Footer />
     </div>
