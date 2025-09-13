@@ -54,24 +54,7 @@ export const signUp = async (email: string, password: string, fullName: string) 
     },
   });
 
-  // If user creation successful, create profile entry
-  if (data.user && !error) {
-    const { error: profileError } = await supabase
-      .from('user_profiles')
-      .insert([{
-        user_id: data.user.id,
-        full_name: fullName,
-        subscription_plan: 'free',
-        subscription_status: 'active',
-        essays_generated: 0,
-        human_reviews_used: 0,
-        plan_limits: { essays: 1, human_reviews: 0 }
-      }]);
-    
-    if (profileError) {
-      console.error('Profile creation error:', profileError);
-    }
-  }
+  if (error) throw error;
 
   return { data, error };
 };
