@@ -204,10 +204,12 @@ export default function EssayBuilder() {
         if (error) {
           console.error('Error saving essay:', error);
           toast.error("Essay generated but couldn't be saved. Please try again.");
-        }
+        } else {
           // Track usage and increment counter
+          const { data: savedEssay } = await saveEssay(essayData);
           await trackUsage(user.id, 'essay_generated', savedEssay?.id);
           await incrementUserUsage(user.id, 'essays_generated');
+        }
       }
 
       setIsGenerating(false);
