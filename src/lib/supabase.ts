@@ -43,20 +43,36 @@ export interface User {
 
 // Auth functions
 export const signUp = async (email: string, password: string, fullName: string) => {
+  // First, create the user with minimal data
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
       data: {
         full_name: fullName,
+      },
+    },
+  });
+
+  // If user creation successful, create profile entry
+  if (data.user && !error) {
+    const { error: profileError } = await supabase
+      .from('user_profiles')
+      .insert([{
+        user_id: data.user.id,
+        full_name: fullName,
         subscription_plan: 'free',
         subscription_status: 'active',
         essays_generated: 0,
         human_reviews_used: 0,
         plan_limits: { essays: 1, human_reviews: 0 }
-      },
-    },
-  });
+      }]);
+    
+    if (profileError) {
+      console.error('Profile creation error:', profileError);
+    }
+  }
+
   return { data, error };
 };
 
@@ -75,7 +91,23 @@ export const signOut = async () => {
 
 export const getCurrentUser = async () => {
   const { data: { user } } = await supabase.auth.getUser();
-  return user;
+  
+  if (!user) return null;
+
+  // Fetch user profile data
+  const { data: profile } = await supabase
+    .from('user_profiles')
+    .select('*')
+    .eq('user_id', user.id)
+    .single();
+
+  // Merge auth user data with profile data
+  return {
+    ...user,
+    ...profile,
+    email: user.email,
+    id: user.id
+  };
 };
 
 // Essay functions
