@@ -12,17 +12,10 @@ import { Loader2, GraduationCap, Sparkles, Check } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-const planDetails = {
-  free: { name: 'Free Plan', price: '$0', essays: 1, reviews: 0 },
-  monthly: { name: 'Monthly Pro', price: '$20/month', essays: 'Unlimited', reviews: 5 },
-  yearly: { name: 'Yearly Pro', price: '$100/year', essays: 'Unlimited', reviews: 20 }
-};
-
 export default function Auth() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState('free');
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -37,12 +30,6 @@ export default function Auth() {
         navigate('/dashboard');
       }
     });
-
-    // Get selected plan from navigation state or localStorage
-    const planFromState = location.state?.selectedPlan;
-    const planFromStorage = localStorage.getItem('selectedPlan');
-    const plan = planFromState || planFromStorage || 'free';
-    setSelectedPlan(plan);
   }, [navigate, location]);
 
   const handleInputChange = (field: string, value: string) => {
@@ -59,7 +46,6 @@ export default function Auth() {
         toast.error(error.message);
       } else {
         toast.success("Successfully signed in!");
-        localStorage.removeItem('selectedPlan');
         navigate('/dashboard');
       }
     } catch (error) {
@@ -89,15 +75,7 @@ export default function Auth() {
       if (error) {
         toast.error(error.message);
       } else {
-        toast.success("Account created! Welcome to EssayAI!");
-        localStorage.removeItem('selectedPlan');
-        
-        // For non-free plans, redirect to payment
-        if (selectedPlan !== 'free') {
-          toast.info("Please complete payment to activate your plan");
-          // TODO: Integrate with payment processor
-        }
-        
+        toast.success("Welcome to EssayAI! You can start with 1 free essay.");
         navigate('/dashboard');
       }
     } catch (error) {
@@ -106,8 +84,6 @@ export default function Auth() {
       setIsLoading(false);
     }
   };
-
-  const currentPlan = planDetails[selectedPlan as keyof typeof planDetails];
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -133,42 +109,28 @@ export default function Auth() {
             </p>
           </div>
 
-          {/* Plan Selection */}
+          {/* Free Plan Info */}
           <Card className="border-primary/20">
             <CardHeader>
-              <CardTitle className="text-lg">Selected Plan</CardTitle>
-              <CardDescription>You can change this anytime after signup</CardDescription>
+              <CardTitle className="text-lg">Start Free</CardTitle>
+              <CardDescription>No payment required to get started</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                {Object.entries(planDetails).map(([key, plan]) => (
-                  <div
-                    key={key}
-                    className={`p-4 rounded-lg border cursor-pointer transition-all ${
-                      selectedPlan === key
-                        ? 'border-primary bg-primary/5'
-                        : 'border-border hover:border-primary/50'
-                    }`}
-                    onClick={() => setSelectedPlan(key)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="flex items-center gap-2">
-                          <h3 className="font-medium">{plan.name}</h3>
-                          {key === 'monthly' && (
-                            <Badge variant="secondary">Popular</Badge>
-                          )}
-                        </div>
-                        <p className="text-sm text-muted-foreground">{plan.price}</p>
-                      </div>
-                      <div className="text-right text-sm">
-                        <p>{plan.essays} essays</p>
-                        <p>{plan.reviews} human reviews</p>
-                      </div>
-                    </div>
+              <div className="p-4 rounded-lg border border-primary bg-primary/5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="font-medium">Free Plan</h3>
+                    <p className="text-sm text-muted-foreground">$0 - No credit card required</p>
                   </div>
-                ))}
+                  <div className="text-right text-sm">
+                    <p>1 free essay</p>
+                    <p>0 human reviews</p>
+                  </div>
+                </div>
               </div>
+              <p className="text-xs text-muted-foreground mt-3">
+                Upgrade anytime when you need more essays or human reviews
+              </p>
             </CardContent>
           </Card>
 
@@ -198,7 +160,7 @@ export default function Auth() {
           <CardHeader className="text-center">
             <CardTitle>Get Started</CardTitle>
             <CardDescription>
-              Create your account to start writing winning essays
+              Create your free account to start writing essays
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -254,13 +216,13 @@ export default function Auth() {
                   <div className="p-3 bg-muted/50 rounded-lg">
                     <p className="text-xs text-muted-foreground">
                       By signing up, you agree to our Terms of Service and Privacy Policy. 
-                      You're selecting the <strong>{currentPlan.name}</strong> plan.
+                      You'll start with our <strong>Free Plan</strong> - no payment required.
                     </p>
                   </div>
 
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    Create Account & Start Writing
+                    Create Free Account
                   </Button>
                 </form>
               </TabsContent>

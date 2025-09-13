@@ -6,10 +6,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Users, Clock, CheckCircle, AlertCircle } from "lucide-react";
-import { getCurrentUser, getUserEssays, updateEssay, Essay } from "@/lib/supabase";
+import { getCurrentUser, getUserEssays, updateEssay, Essay, checkUsageLimit, incrementUserUsage, trackUsage } from "@/lib/supabase";
 import { toast } from "@/components/ui/sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import UpgradeModal from "@/components/UpgradeModal";
 
 export default function HumanReview() {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ export default function HumanReview() {
   const [reviewInstructions, setReviewInstructions] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [usageCheck, setUsageCheck] = useState<any>(null);
 
   useEffect(() => {
     loadData();
@@ -50,13 +53,11 @@ export default function HumanReview() {
       return;
     }
 
-    // Check if user has available reviews
-    const userReviewsUsed = user?.user_metadata?.human_reviews_used || 0;
-    const userPlan = user?.user_metadata?.subscription_plan || 'free';
-    const planLimits = user?.user_metadata?.plan_limits || { human_reviews: 0 };
-
-    if (userReviewsUsed >= planLimits.human_reviews && userPlan !== 'unlimited') {
-      toast.error("You've reached your human review limit. Please upgrade your plan.");
+    // Check usage limits before submitting
+    const limitCheck = await checkUsageLimit(user.id, 'human_review');
+    if (!limitCheck.canProceed) {
+      setUsageCheck(limitCheck);
+      setShowUpgradeModal(true);
       return;
     }
 
@@ -72,11 +73,11 @@ export default function HumanReview() {
       if (error) {
         toast.error("Failed to submit essay for review");
       } else {
+        // Track usage and increment counter
+        await trackUsage(user.id, 'human_review_requested', selectedEssay);
+        await incrementUserUsage(user.id, 'human_reviews_used');
+        
         toast.success("Essay submitted for human review! You'll receive feedback within 48 hours.");
-        
-        // Update user's review count
-        // TODO: Update user metadata in Supabase
-        
         navigate('/dashboard');
       }
     } catch (error) {
@@ -303,6 +304,14 @@ export default function HumanReview() {
           </div>
         </div>
       </div>
+      
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        actionType="human_review"
+        remaining={usageCheck?.remaining || 0}
+      />
+      
       <Footer />
     </div>
   );

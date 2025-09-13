@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { generateEssay as generateEssayFromOpenAI } from "@/lib/openai";
-import { saveEssay, getCurrentUser } from "@/lib/supabase";
+import { saveEssay, getCurrentUser, checkUsageLimit, incrementUserUsage, trackUsage } from "@/lib/supabase";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { toast } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
@@ -14,6 +14,7 @@ import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, Mic, MicOff, School, FileText, Users, Sparkles } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import UpgradeModal from "@/components/UpgradeModal";
 import { v4 as uuidv4 } from 'uuid';
 
 interface SchoolOption {
@@ -97,6 +98,8 @@ export default function EssayBuilder() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [activeVoiceInput, setActiveVoiceInput] = useState<string | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [usageCheck, setUsageCheck] = useState<any>(null);
 
   // Check authentication on component mount
   useState(() => {
@@ -163,6 +166,19 @@ export default function EssayBuilder() {
   const allQuestionsAnswered = QUESTIONS.every(q => responses[q.id]?.trim().length > 0);
 
   const handleGenerateEssay = async () => {
+    if (!user) {
+      toast.error("Please sign in to generate essays");
+      return;
+    }
+
+    // Check usage limits before generating
+    const limitCheck = await checkUsageLimit(user.id, 'essay');
+    if (!limitCheck.canProceed) {
+      setUsageCheck(limitCheck);
+      setShowUpgradeModal(true);
+      return;
+    }
+
     setIsGenerating(true);
     
     try {
@@ -189,6 +205,9 @@ export default function EssayBuilder() {
           console.error('Error saving essay:', error);
           toast.error("Essay generated but couldn't be saved. Please try again.");
         }
+          // Track usage and increment counter
+          await trackUsage(user.id, 'essay_generated', savedEssay?.id);
+          await incrementUserUsage(user.id, 'essays_generated');
       }
 
       setIsGenerating(false);
@@ -496,6 +515,14 @@ export default function EssayBuilder() {
           </div>
         </div>
       </div>
+      
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        actionType="essay"
+        remaining={usageCheck?.remaining || 0}
+      />
+      
       <Footer />
     </div>
   );

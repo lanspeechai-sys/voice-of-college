@@ -41,6 +41,76 @@ export interface User {
   };
 }
 
+// Usage tracking functions
+export const trackUsage = async (userId: string, actionType: 'essay_generated' | 'human_review_requested', essayId?: string) => {
+  const { error } = await supabase
+    .from('usage_tracking')
+    .insert({
+      user_id: userId,
+      action_type: actionType,
+      essay_id: essayId
+    });
+  
+  if (error) {
+    console.error('Error tracking usage:', error);
+  }
+  
+  return { error };
+};
+
+export const getUserUsage = async (userId: string) => {
+  const { data: profile, error: profileError } = await supabase
+    .from('user_profiles')
+    .select('essays_generated, human_reviews_used, subscription_plan, plan_limits')
+    .eq('user_id', userId)
+    .single();
+    
+  if (profileError) {
+    return { data: null, error: profileError };
+  }
+  
+  return { data: profile, error: null };
+};
+
+export const incrementUserUsage = async (userId: string, type: 'essays_generated' | 'human_reviews_used') => {
+  const { data, error } = await supabase.rpc('increment_user_usage', {
+    user_id: userId,
+    usage_type: type
+  });
+  
+  return { data, error };
+};
+
+export const checkUsageLimit = async (userId: string, actionType: 'essay' | 'human_review') => {
+  const { data: usage, error } = await getUserUsage(userId);
+  
+  if (error || !usage) {
+    return { canProceed: false, error };
+  }
+  
+  const limits = usage.plan_limits;
+  
+  if (actionType === 'essay') {
+    const canProceed = limits.essays === -1 || usage.essays_generated < limits.essays;
+    return { 
+      canProceed, 
+      remaining: limits.essays === -1 ? -1 : Math.max(0, limits.essays - usage.essays_generated),
+      used: usage.essays_generated,
+      limit: limits.essays,
+      error: null 
+    };
+  } else {
+    const canProceed = limits.human_reviews === -1 || usage.human_reviews_used < limits.human_reviews;
+    return { 
+      canProceed, 
+      remaining: limits.human_reviews === -1 ? -1 : Math.max(0, limits.human_reviews - usage.human_reviews_used),
+      used: usage.human_reviews_used,
+      limit: limits.human_reviews,
+      error: null 
+    };
+  }
+};
+
 // Auth functions
 export const signUp = async (email: string, password: string, fullName: string) => {
   // First, create the user with minimal data
