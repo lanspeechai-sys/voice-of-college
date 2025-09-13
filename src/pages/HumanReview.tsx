@@ -14,7 +14,6 @@ import UpgradeModal from "@/components/UpgradeModal";
 
 export default function HumanReview() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [essays, setEssays] = useState<Essay[]>([]);
   const [selectedEssay, setSelectedEssay] = useState<string>("");
   const [reviewInstructions, setReviewInstructions] = useState("");
@@ -25,11 +24,6 @@ export default function HumanReview() {
 
   useEffect(() => {
     loadData();
-    
-    // Check if essay was preselected from EssayResult page
-    if (location.state?.preselectedEssay) {
-      setSelectedEssay(location.state.preselectedEssay);
-    }
   }, []);
 
   const loadData = async () => {
@@ -100,7 +94,7 @@ export default function HumanReview() {
       if (essayError) {
         console.error('Error updating essay status:', essayError);
         // Don't return here as the review was already submitted
-      });
+      }
 
       // Track usage and increment counter
       await trackUsage(user.id, 'human_review_requested', selectedEssay);
