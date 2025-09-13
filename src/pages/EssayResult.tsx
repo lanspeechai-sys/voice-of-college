@@ -214,29 +214,39 @@ export default function EssayResult() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Users className="h-5 w-5 text-primary" />
-                  Get Human Feedback
+                  Professional Human Review
                 </CardTitle>
                 <CardDescription>
-                  Share your essay with teachers, counselors, or mentors for additional insights
+                  Get professional feedback from experienced admissions counselors
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Textarea
-                  placeholder="Add notes or feedback from reviewers here..."
-                  value={feedback}
-                  onChange={(e) => setFeedback(e.target.value)}
-                  className="min-h-[100px]"
-                />
-                <div className="mt-4 flex gap-2 flex-wrap">
+                <div className="space-y-4">
+                  <div className="p-4 bg-muted/50 rounded-lg">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Users className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-medium">What you get:</span>
+                    </div>
+                    <ul className="text-xs text-muted-foreground space-y-1">
+                      <li>• Detailed content and structure feedback</li>
+                      <li>• Grammar and style improvements</li>
+                      <li>• College-specific recommendations</li>
+                      <li>• 48-hour turnaround time</li>
+                    </ul>
+                  </div>
+                  
                   <Button 
-                    onClick={handleImproveEssay}
-                    disabled={isImproving || !feedback.trim()}
-                    size="sm"
+                    variant="outline" 
+                    className="w-full"
+                    onClick={() => navigate('/human-review', { 
+                      state: { 
+                        preselectedEssay: essayId,
+                        essayData: { school, prompt, essay }
+                      }
+                    })}
                   >
-                    {isImproving ? "Improving..." : "Improve Essay"}
-                  </Button>
-                  <Button variant="outline" size="sm" onClick={handleShare}>
-                    Share with Counselor
+                    <Users className="h-4 w-4 mr-2" />
+                    Submit for Human Review ($5)
                   </Button>
                 </div>
               </CardContent>

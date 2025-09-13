@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { ArrowLeft, Users, Clock, CheckCircle, AlertCircle } from "lucide-react";
-import { getCurrentUser, getUserEssays, updateEssay, Essay, checkUsageLimit, incrementUserUsage, trackUsage } from "@/lib/supabase";
+import { getCurrentUser, getUserEssays, Essay, checkUsageLimit, incrementUserUsage, trackUsage, supabase } from "@/lib/supabase";
 import { toast } from "@/components/ui/sonner";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -14,6 +14,7 @@ import UpgradeModal from "@/components/UpgradeModal";
 
 export default function HumanReview() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [essays, setEssays] = useState<Essay[]>([]);
   const [selectedEssay, setSelectedEssay] = useState<string>("");
   const [reviewInstructions, setReviewInstructions] = useState("");
@@ -24,6 +25,11 @@ export default function HumanReview() {
 
   useEffect(() => {
     loadData();
+    
+    // Check if essay was preselected from EssayResult page
+    if (location.state?.preselectedEssay) {
+      setSelectedEssay(location.state.preselectedEssay);
+    }
   }, []);
 
   const loadData = async () => {
@@ -64,23 +70,53 @@ export default function HumanReview() {
     setIsSubmitting(true);
 
     try {
-      const { error } = await updateEssay(selectedEssay, {
-        review_status: 'pending',
-        review_requested_at: new Date().toISOString(),
-        human_review: reviewInstructions
+      // Insert into human_reviews table
+      const { data: reviewData, error: reviewError } = await supabase
+        .from('human_reviews')
+        .insert({
+          essay_id: selectedEssay,
+          user_id: user.id,
+          reviewer_instructions: reviewInstructions,
+          review_status: 'pending'
+        })
+        .select()
+        .single();
+
+      if (reviewError) {
+        console.error('Error submitting review:', reviewError);
+        toast.error("Failed to submit essay for review");
+        return;
+      }
+
+      // Update essay status
+      const { error: essayError } = await supabase
+        .from('essays')
+        .update({
+          review_status: 'pending',
+          review_requested_at: new Date().toISOString()
+        })
+        .eq('id', selectedEssay);
+
+      if (essayError) {
+        console.error('Error updating essay status:', essayError);
+        // Don't return here as the review was already submitted
       });
 
-      if (error) {
-        toast.error("Failed to submit essay for review");
-      } else {
-        // Track usage and increment counter
-        await trackUsage(user.id, 'human_review_requested', selectedEssay);
-        await incrementUserUsage(user.id, 'human_reviews_used');
-        
-        toast.success("Essay submitted for human review! You'll receive feedback within 48 hours.");
-        navigate('/dashboard');
-      }
+      // Track usage and increment counter
+      await trackUsage(user.id, 'human_review_requested', selectedEssay);
+      await incrementUserUsage(user.id, 'human_reviews_used');
+      
+      toast.success("Essay submitted for human review! Our team has been notified and you'll receive feedback within 48 hours.");
+      
+      // Reset form
+      setSelectedEssay("");
+      setReviewInstructions("");
+      
+      // Reload essays to show updated status
+      await loadData();
+      
     } catch (error) {
+      console.error('Error in review submission:', error);
       toast.error("Failed to submit for review");
     } finally {
       setIsSubmitting(false);

@@ -186,7 +186,16 @@ export const updateEssay = async (id: string, updates: Partial<Essay>) => {
 export const getUserEssays = async (userId: string) => {
   const { data, error } = await supabase
     .from('essays')
-    .select('*')
+    .select(`
+      *,
+      human_reviews(
+        id,
+        review_status,
+        reviewer_feedback,
+        reviewed_at,
+        created_at
+      )
+    `)
     .eq('user_id', userId)
     .order('created_at', { ascending: false });
   return { data, error };
