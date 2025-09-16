@@ -57,33 +57,27 @@ const Header = () => {
         </div>
         
         <nav className="hidden md:flex items-center gap-6">
-          <a href="/#how-it-works" className="text-muted-foreground hover:text-primary transition-colors">
-            How it Works
-          </a>
-          <a href="/#features" className="text-muted-foreground hover:text-primary transition-colors">
+          <a href="/#features" className="text-muted-foreground hover:text-primary transition-colors font-medium">
             Features
-          </a>
-          <a href="/pricing" className="text-muted-foreground hover:text-primary transition-colors">
-            Pricing
           </a>
           
           {isLoading ? (
-            <div className="w-20 h-8 bg-muted animate-pulse rounded" />
+            <div className="w-16 h-8 bg-muted animate-pulse rounded" />
           ) : user ? (
             <>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")}>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")} className="hidden lg:inline-flex">
                 Dashboard
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/human-review")}>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/human-review")} className="hidden lg:inline-flex">
                 Human Review
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/reviewer-dashboard")}>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/reviewer-dashboard")} className="hidden xl:inline-flex">
                 Reviewer
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => navigate("/subscription-management")}>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/subscription-management")} className="hidden xl:inline-flex">
                 Billing
               </Button>
-              <Button variant="ghost" size="sm" onClick={handleSignOut}>
+              <Button variant="ghost" size="sm" onClick={handleSignOut} className="hidden lg:inline-flex">
                 Sign Out
               </Button>
               <Button 
@@ -96,7 +90,7 @@ const Header = () => {
             </>
           ) : (
             <>
-              <Button variant="ghost" size="sm" onClick={() => setShowAuthModal(true)}>
+              <Button variant="ghost" size="sm" onClick={() => setShowAuthModal(true)} className="hidden sm:inline-flex">
                 Sign In
               </Button>
               <Button 
@@ -120,19 +114,13 @@ const Header = () => {
             </SheetTrigger>
             <SheetContent side="right" className="w-80">
               <div className="flex flex-col space-y-4 mt-8">
-                <a href="/#how-it-works" className="text-lg font-medium hover:text-primary transition-colors">
-                  How it Works
-                </a>
                 <a href="/#features" className="text-lg font-medium hover:text-primary transition-colors">
                   Features
-                </a>
-                <a href="/pricing" className="text-lg font-medium hover:text-primary transition-colors">
-                  Pricing
                 </a>
                 
                 <div className="border-t pt-4 space-y-3">
                   {isLoading ? (
-                    <div className="w-20 h-8 bg-muted animate-pulse rounded" />
+                    <div className="w-16 h-8 bg-muted animate-pulse rounded" />
                   ) : user ? (
                     <>
                       <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/dashboard")}>
