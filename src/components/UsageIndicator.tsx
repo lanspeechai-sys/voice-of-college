@@ -143,14 +143,26 @@ export default function UsageIndicator() {
 
         {(isNearLimit || isAtLimit) && (
           <div className="pt-2 border-t">
-            <Button 
-              variant="hero" 
-              size="sm" 
-              className="w-full"
-              onClick={() => navigate('/pricing')}
-            >
-              {isAtLimit ? 'Upgrade to Continue' : 'Upgrade Plan'}
-            </Button>
+            <div className="space-y-2">
+              <Button 
+                variant="hero" 
+                size="sm" 
+                className="w-full"
+                onClick={() => navigate('/pricing')}
+              >
+                {isAtLimit ? 'Upgrade to Continue' : 'Upgrade Plan'}
+              </Button>
+              {user?.subscription_plan !== 'free' && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="w-full text-xs"
+                  onClick={() => navigate('/subscription-management')}
+                >
+                  Manage Billing
+                </Button>
+              )}
+            </div>
           </div>
         )}
       </CardContent>

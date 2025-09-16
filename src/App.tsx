@@ -14,6 +14,7 @@ import HumanReview from "./pages/HumanReview";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import ReviewerDashboard from "./pages/ReviewerDashboard";
+import SubscriptionManagement from "./pages/SubscriptionManagement";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -55,6 +56,11 @@ const App = () => (
           <Route path="/reviewer-dashboard" element={
             <ProtectedRoute>
               <ReviewerDashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/subscription-management" element={
+            <ProtectedRoute>
+              <SubscriptionManagement />
             </ProtectedRoute>
           } />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -82,10 +82,15 @@ export default function Dashboard() {
                     Welcome back, {user?.user_metadata?.full_name || user?.email}
                   </p>
                 </div>
-                <Button onClick={() => navigate('/essay-builder')} className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  New Essay
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" onClick={() => navigate('/subscription-management')} className="gap-2">
+                    Manage Billing
+                  </Button>
+                  <Button onClick={() => navigate('/essay-builder')} className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    New Essay
+                  </Button>
+                </div>
               </div>
             </div>
             <div>
