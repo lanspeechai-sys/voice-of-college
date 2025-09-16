@@ -58,9 +58,9 @@ export default function SubscriptionManagement() {
       const { data: subData, error: subError } = await supabase
         .from('stripe_user_subscriptions')
         .select('*')
-        .single();
+        .maybeSingle();
 
-      if (subError && subError.code !== 'PGRST116') {
+      if (subError) {
         console.error('Error loading subscription:', subError);
       } else if (subData) {
         setSubscription(subData);
@@ -111,7 +111,12 @@ export default function SubscriptionManagement() {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create customer portal session');
+        const errorData = await response.json().catch(() => ({}));
+        if (errorData.error && errorData.error.includes('No customer found')) {
+          toast.error('You do not have a billing account yet. Please make a purchase or upgrade your plan first.');
+          return;
+        }
+        throw new Error(errorData.error || 'Failed to create customer portal session');
       }
 
       const { url } = await response.json();
