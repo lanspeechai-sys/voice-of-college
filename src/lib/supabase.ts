@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { sendWelcomeNotification, checkAndNotifyUsageLimit } from './notifications';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -78,6 +79,11 @@ export const incrementUserUsage = async (userId: string, type: 'essays_generated
     usage_type: type
   });
   
+  // Check if user needs usage limit notification after incrementing
+  if (!error) {
+    await checkAndNotifyUsageLimit(userId);
+  }
+  
   return { data, error };
 };
 
@@ -125,6 +131,16 @@ export const signUp = async (email: string, password: string, fullName: string) 
   });
 
   if (error) throw error;
+
+  // Send welcome email if user was created successfully
+  if (data.user && !error) {
+    try {
+      await sendWelcomeNotification(data.user.id, email, fullName);
+    } catch (emailError) {
+      console.error('Failed to send welcome email:', emailError);
+      // Don't throw error as this shouldn't block user registration
+    }
+  }
 
   return { data, error };
 };

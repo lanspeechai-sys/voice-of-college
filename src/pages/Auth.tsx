@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { signIn, signUp, getCurrentUser } from "@/lib/supabase";
 import { toast } from "@/components/ui/sonner";
 import { Loader2 } from "lucide-react";
+import { sendWelcomeNotification } from "@/lib/notifications";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -74,7 +75,6 @@ export default function Auth() {
       if (error) {
         toast.error(error.message);
       } else {
-        toast.success("Welcome to EssayAI! You can start with 1 free essay.");
         toast.success("Welcome to Splennet! You can start with 1 free essay.");
         navigate('/dashboard');
       }
