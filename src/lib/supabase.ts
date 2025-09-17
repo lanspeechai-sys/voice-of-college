@@ -5,10 +5,20 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables. Please check your .env file.');
+  console.error('Missing Supabase environment variables. Please check your .env file.');
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '', {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  },
+  global: {
+    headers: {
+      'X-Client-Info': 'splennet-web-app',
+    },
+  },
+});
 
 export interface Essay {
   id: string;
@@ -159,24 +169,44 @@ export const signOut = async () => {
 };
 
 export const getCurrentUser = async () => {
-  const { data: { user } } = await supabase.auth.getUser();
+  try {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    
+    if (authError) {
+      console.error('Auth error:', authError);
+      return null;
+    }
+    
+    if (!user) return null;
   
-  if (!user) return null;
+    // Fetch user profile data
+    const { data: profile, error: profileError } = await supabase
+      .from('user_profiles')
+      .select('*')
+      .eq('user_id', user.id)
+      .maybeSingle();
 
-  // Fetch user profile data
-  const { data: profile } = await supabase
-    .from('user_profiles')
-    .select('*')
-    .eq('user_id', user.id)
-    .maybeSingle();
+    if (profileError) {
+      console.error('Profile fetch error:', profileError);
+      // Return user without profile data if profile fetch fails
+      return {
+        ...user,
+        email: user.email,
+        id: user.id
+      };
+    }
 
-  // Merge auth user data with profile data
-  return {
-    ...user,
-    ...profile,
-    email: user.email,
-    id: user.id
-  };
+    // Merge auth user data with profile data
+    return {
+      ...user,
+      ...profile,
+      email: user.email,
+      id: user.id
+    };
+  } catch (error) {
+    console.error('Error in getCurrentUser:', error);
+    return null;
+  }
 };
 
 // Essay functions
