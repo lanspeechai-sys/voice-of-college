@@ -168,7 +168,7 @@ export const getCurrentUser = async () => {
     .from('user_profiles')
     .select('*')
     .eq('user_id', user.id)
-    .single();
+    .maybeSingle();
 
   // Merge auth user data with profile data
   return {
