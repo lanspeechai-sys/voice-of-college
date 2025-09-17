@@ -33,6 +33,8 @@ const App = () => (
           <Route path="/auth" element={<Auth />} />
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<Privacy />} />
+          <Route path="/refunds" element={<Refunds />} />
+          <Route path="/academic-integrity" element={<AcademicIntegrity />} />
           <Route path="/essay-builder" element={
             <ProtectedRoute>
               <EssayBuilder />
