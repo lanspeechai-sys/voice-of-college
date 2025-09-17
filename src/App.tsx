@@ -13,6 +13,8 @@ import Dashboard from "./pages/Dashboard";
 import HumanReview from "./pages/HumanReview";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
+import Refunds from "./pages/Refunds";
+import AcademicIntegrity from "./pages/AcademicIntegrity";
 import ReviewerDashboard from "./pages/ReviewerDashboard";
 import SubscriptionManagement from "./pages/SubscriptionManagement";
 import NotFound from "./pages/NotFound";
