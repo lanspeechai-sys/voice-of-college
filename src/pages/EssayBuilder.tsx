@@ -373,11 +373,6 @@ const SCHOOLS: SchoolOption[] = [
     name: "Custom Essay Topic",
     prompts: []
   }
-  {
-    id: "custom",
-    name: "Custom Essay Topic",
-    prompts: []
-  }
 ];
 
 const QUESTIONS = [
