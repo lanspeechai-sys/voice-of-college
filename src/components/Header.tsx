@@ -60,6 +60,9 @@ const Header = () => {
           <a href="/#features" className="text-muted-foreground hover:text-primary transition-colors font-medium">
             Features
           </a>
+          <a href="https://www.youtube.com/@splennet" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary transition-colors font-medium">
+            Demo
+          </a>
           
           {isLoading ? (
             <div className="w-16 h-8 bg-muted animate-pulse rounded" />

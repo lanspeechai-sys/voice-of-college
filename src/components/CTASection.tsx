@@ -42,7 +42,9 @@ const CTASection = () => {
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
             <Button variant="outline" size="lg">
-              Watch Demo
+              <a href="https://www.youtube.com/@splennet" target="_blank" rel="noopener noreferrer" className="flex items-center">
+                Watch Demo
+              </a>
             </Button>
           </div>
 
