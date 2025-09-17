@@ -387,10 +387,6 @@ export default function EssayResult() {
                   <Edit3 className="h-4 w-4 mr-2" />
                   Create Another Essay
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
-                  <Download className="h-4 w-4 mr-2" />
-                  Export to Common App
-                </Button>
               </CardContent>
             </Card>
           </div>
