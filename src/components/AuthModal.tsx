@@ -175,3 +175,5 @@ const AuthModal = memo(({ isOpen, onClose, onSuccess }: AuthModalProps) => {
       </DialogContent>
     </Dialog>
   );
+}
+)
