@@ -111,27 +111,27 @@ export default function Pricing() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="pt-24 pb-16">
+      <div className="pt-20 sm:pt-24 pb-16">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
               Choose Your{" "}
               <span className="bg-gradient-primary bg-clip-text text-transparent">
                 Perfect Plan
               </span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
               Get AI-powered essays that bypass detection systems and professional human reviews 
               to maximize your college admission success
             </p>
             
-            <div className="mt-8 p-4 bg-gradient-primary/10 rounded-lg max-w-3xl mx-auto">
+            <div className="mt-8 p-4 sm:p-4 bg-gradient-primary/10 rounded-lg max-w-3xl mx-auto">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Badge variant="secondary" className="bg-green-100 text-green-800">
                   ✓ AI Detection Bypass Guaranteed
                 </Badge>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                 All our AI-generated essays are designed to appear completely human and pass 
                 Turnitin, ZeroGPT, Grammarly AI Checker, and other detection systems
               </p>
@@ -139,12 +139,12 @@ export default function Pricing() {
           </div>
 
           {/* Main Plans */}
-          <div className="grid md:grid-cols-3 gap-8 mb-16">
+          <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-16">
             {plans.map((plan) => (
               <Card 
                 key={plan.id} 
-                className={`relative transition-all duration-300 hover:shadow-card ${
-                  plan.popular ? 'border-primary shadow-elegant scale-105' : ''
+                className={`relative transition-all duration-300 hover:shadow-card touch-manipulation ${
+                  plan.popular ? 'border-primary shadow-elegant md:scale-105' : ''
                 }`}
               >
                 {plan.popular && (
@@ -159,12 +159,12 @@ export default function Pricing() {
                   <div className={`w-12 h-12 rounded-full bg-gradient-primary flex items-center justify-center mx-auto mb-4`}>
                     <plan.icon className="h-6 w-6 text-white" />
                   </div>
-                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
+                  <CardTitle className="text-xl sm:text-2xl">{plan.name}</CardTitle>
                   <div className="mt-2">
-                    <span className="text-4xl font-bold">{plan.price}</span>
+                    <span className="text-3xl sm:text-4xl font-bold">{plan.price}</span>
                     <span className="text-muted-foreground ml-1">/{plan.period}</span>
                   </div>
-                  <CardDescription className="mt-2">
+                  <CardDescription className="mt-2 text-sm">
                     {plan.description}
                   </CardDescription>
                 </CardHeader>
@@ -196,6 +196,7 @@ export default function Pricing() {
                   <Button 
                     className="w-full"
                     variant={plan.popular ? "hero" : "outline"}
+                    size="lg"
                     onClick={() => handlePlanSelect(plan.id)}
                   >
                     {plan.buttonText}

@@ -19,14 +19,14 @@ const HeroSection = () => {
       </div>
 
       <div className="container mx-auto px-4 grid lg:grid-cols-2 gap-12 items-center relative z-10">
-        <div className="space-y-8">
+        <div className="space-y-6 lg:space-y-8 text-center lg:text-left">
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 bg-muted px-4 py-2 rounded-full text-sm">
               <Sparkles className="h-4 w-4 text-accent" />
               <span className="text-muted-foreground">AI-Powered Essay Writing</span>
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
               Craft Winning{" "}
               <span className="bg-gradient-primary bg-clip-text text-transparent">
                 College Essays
@@ -34,7 +34,7 @@ const HeroSection = () => {
               in Minutes
             </h1>
             
-            <p className="text-xl text-muted-foreground leading-relaxed">
+            <p className="text-lg sm:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto lg:mx-0">
               Get into your dream school with AI that preserves your unique voice while 
               crafting compelling, authentic essays tailored to any prompt.
             </p>
@@ -43,22 +43,22 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row gap-4">
             <Button 
               variant="hero" 
-              size="lg" 
-              className="group"
+              size="lg"
+              className="group w-full sm:w-auto py-4 text-base"
               onClick={() => navigate("/auth")}
             >
               Start Writing My Essay
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" className="w-full sm:w-auto py-4 text-base">
               <a href="https://www.youtube.com/@splennet" target="_blank" rel="noopener noreferrer" className="flex items-center">
                 Watch Demo
               </a>
             </Button>
           </div>
 
-          <div className="flex items-center gap-8 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 justify-center lg:justify-start">
               <div className="flex -space-x-2">
                 {[1, 2, 3, 4].map((i) => (
                   <div
@@ -71,7 +71,7 @@ const HeroSection = () => {
               </div>
               <span>10,000+ essays created</span>
             </div>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 justify-center lg:justify-start">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star key={i} className="h-4 w-4 fill-secondary text-secondary" />
               ))}
@@ -80,12 +80,12 @@ const HeroSection = () => {
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative order-first lg:order-last">
           <div className="absolute inset-0 bg-gradient-primary rounded-2xl blur-3xl opacity-20 scale-105" />
           <img
             src={heroImage}
             alt="AI-powered college essay writing assistant"
-            className="relative z-10 w-full rounded-2xl shadow-elegant"
+            className="relative z-10 w-full max-w-md mx-auto lg:max-w-none rounded-2xl shadow-elegant"
           />
         </div>
       </div>

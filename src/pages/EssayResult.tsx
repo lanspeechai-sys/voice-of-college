@@ -113,50 +113,65 @@ export default function EssayResult() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="pt-24 pb-8">
-      <div className="container mx-auto px-4 max-w-4xl">
+      <div className="pt-20 sm:pt-24 pb-8">
+        <div className="container mx-auto px-4 max-w-4xl">
         <div className="mb-8">
           <Button
             variant="ghost"
             onClick={() => navigate(-1)}
-            className="mb-4"
+            className="mb-4 touch-manipulation"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
           
           <div className="text-center">
-            <h1 className="text-3xl font-bold mb-2">Your Essay is Ready!</h1>
-            <p className="text-muted-foreground">
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2">Your Essay is Ready!</h1>
+            <p className="text-sm sm:text-base text-muted-foreground px-4">
               Here's your personalized college application essay
             </p>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
+          <div className="lg:col-span-2 space-y-4 lg:space-y-6">
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
                   <div>
                     <CardTitle className="flex items-center gap-2">
                       <CheckCircle className="h-5 w-5 text-green-500" />
                       Generated Essay
                     </CardTitle>
-                    <CardDescription>
+                    <CardDescription className="text-sm">
                       {school} • {wordCount} words
                     </CardDescription>
                   </div>
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" onClick={handleCopyEssay}>
+                  <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleCopyEssay}
+                      className="flex-1 sm:flex-none touch-manipulation"
+                    >
                       <Copy className="h-4 w-4 mr-2" />
                       Copy
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handleDownload}>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleDownload}
+                      className="flex-1 sm:flex-none touch-manipulation"
+                    >
                       <Download className="h-4 w-4 mr-2" />
                       Download
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handleShare}>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={handleShare}
+                      className="flex-1 sm:flex-none touch-manipulation"
+                    >
                       <Share2 className="h-4 w-4 mr-2" />
                       Share
                     </Button>
@@ -164,9 +179,9 @@ export default function EssayResult() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="mb-4 p-3 bg-muted/50 rounded-lg">
+                <div className="mb-4 p-4 sm:p-3 bg-muted/50 rounded-lg">
                   <p className="text-sm font-medium mb-1">Essay Prompt:</p>
-                  <p className="text-sm italic">"{prompt}"</p>
+                  <p className="text-sm italic leading-relaxed">"{prompt}"</p>
                 </div>
                 
                 {isEditing ? (
@@ -174,13 +189,20 @@ export default function EssayResult() {
                     <Textarea
                       value={essay}
                       onChange={(e) => setEssay(e.target.value)}
-                      className="min-h-[500px] font-serif text-base leading-relaxed"
+                      className="min-h-[400px] sm:min-h-[500px] font-serif text-base leading-relaxed"
                     />
-                    <div className="flex gap-2">
-                      <Button onClick={handleSaveChanges}>
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button 
+                        onClick={handleSaveChanges}
+                        className="w-full sm:w-auto touch-manipulation"
+                      >
                         Save Changes
                       </Button>
-                      <Button variant="outline" onClick={() => setIsEditing(false)}>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => setIsEditing(false)}
+                        className="w-full sm:w-auto touch-manipulation"
+                      >
                         Cancel
                       </Button>
                     </div>
@@ -189,7 +211,7 @@ export default function EssayResult() {
                   <div className="space-y-4">
                     <div className="prose prose-lg max-w-none">
                       {essay.split('\n\n').map((paragraph, index) => (
-                        <p key={index} className="mb-4 text-base leading-relaxed font-serif">
+                        <p key={index} className="mb-4 text-sm sm:text-base leading-relaxed font-serif">
                           {paragraph}
                         </p>
                       ))}
@@ -197,7 +219,7 @@ export default function EssayResult() {
                     <Button
                       variant="outline"
                       onClick={() => setIsEditing(true)}
-                      className="mt-4"
+                      className="mt-4 w-full sm:w-auto touch-manipulation"
                     >
                       <Edit3 className="h-4 w-4 mr-2" />
                       Edit Essay
@@ -231,6 +253,7 @@ export default function EssayResult() {
                     <Button 
                       variant="outline" 
                       size="sm"
+                      className="flex-1 sm:flex-none touch-manipulation"
                       onClick={() => navigate('/human-review', { 
                         state: { 
                           preselectedEssay: essayId,
@@ -243,6 +266,7 @@ export default function EssayResult() {
                     <Button 
                       variant="outline" 
                       size="sm"
+                      className="flex-1 sm:flex-none touch-manipulation"
                       onClick={() => {
                         navigator.clipboard.writeText(humanFeedback);
                         toast.success("Feedback copied to clipboard!");

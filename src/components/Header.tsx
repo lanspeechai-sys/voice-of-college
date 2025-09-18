@@ -1,7 +1,7 @@
 import { GraduationCap, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useCallback, memo } from "react";
 import { getCurrentUser, signOut } from "@/lib/supabase";
@@ -12,6 +12,7 @@ const Header = memo(() => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -33,6 +34,7 @@ const Header = memo(() => {
     try {
       await signOut();
       setUser(null);
+      setIsMobileMenuOpen(false);
       toast.success("Signed out successfully");
       navigate("/");
     } catch (error) {
@@ -40,8 +42,12 @@ const Header = memo(() => {
     }
   }, [navigate]);
 
+  const handleMobileNavigation = useCallback((path: string) => {
+    navigate(path);
+    setIsMobileMenuOpen(false);
+  }, [navigate]);
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div 
           className="flex items-center gap-2 cursor-pointer" 
@@ -109,59 +115,125 @@ const Header = memo(() => {
 
         {/* Mobile Menu */}
         <div className="md:hidden">
-          <Sheet>
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-80">
-              <div className="flex flex-col space-y-4 mt-8">
-                <a href="/#features" className="text-lg font-medium hover:text-primary transition-colors">
-                  Features
-                </a>
+            <SheetContent side="right" className="w-full sm:w-80 p-0">
+              <div className="flex flex-col h-full">
+                <div className="flex items-center justify-between p-4 border-b">
+                  <div className="flex items-center gap-2">
+                    <GraduationCap className="h-6 w-6 text-primary" />
+                    <span className="font-bold text-lg">Splennet</span>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="icon"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
                 
-                <div className="border-t pt-4 space-y-3">
+                <div className="flex flex-col space-y-2 p-4 flex-1">
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-lg py-6"
+                  onClick={() => handleMobileNavigation("/#features")}
+                >
+                  Features
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-lg py-6"
+                  onClick={() => window.open("https://www.youtube.com/@splennet", "_blank")}
+                >
+                  Demo
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  className="w-full justify-start text-lg py-6"
+                  onClick={() => handleMobileNavigation("/pricing")}
+                >
+                  Pricing
+                </Button>
+                
+                <div className="border-t pt-4 space-y-3 mt-4">
                   {isLoading ? (
-                    <div className="w-16 h-8 bg-muted animate-pulse rounded" />
+                    <div className="w-full h-12 bg-muted animate-pulse rounded" />
                   ) : user ? (
                     <>
-                      <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/dashboard")}>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start py-6 text-lg" 
+                        onClick={() => handleMobileNavigation("/dashboard")}
+                      >
                         Dashboard
                       </Button>
-                      <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/human-review")}>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start py-6 text-lg" 
+                        onClick={() => handleMobileNavigation("/human-review")}
+                      >
                         Human Review
                       </Button>
-                      <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/reviewer-dashboard")}>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start py-6 text-lg" 
+                        onClick={() => handleMobileNavigation("/reviewer-dashboard")}
+                      >
                         Reviewer Dashboard
                       </Button>
-                      <Button variant="ghost" className="w-full justify-start" onClick={() => navigate("/subscription-management")}>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start py-6 text-lg" 
+                        onClick={() => handleMobileNavigation("/subscription-management")}
+                      >
                         Subscription & Billing
                       </Button>
-                      <Button variant="ghost" className="w-full justify-start" onClick={handleSignOut}>
-                        Sign Out
-                      </Button>
                       <Button 
-                        variant="hero" 
-                        className="w-full"
-                        onClick={() => navigate("/essay-builder")}
+                        variant="ghost" 
+                        className="w-full justify-start py-6 text-lg text-destructive" 
+                        onClick={handleSignOut}
                       >
-                        New Essay
+                        Sign Out
                       </Button>
                     </>
                   ) : (
                     <>
-                      <Button variant="ghost" className="w-full justify-start" onClick={() => setShowAuthModal(true)}>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start py-6 text-lg" 
+                        onClick={() => {
+                          setIsMobileMenuOpen(false);
+                          setShowAuthModal(true);
+                        }}
+                      >
                         Sign In
                       </Button>
-                      <Button 
-                        variant="hero" 
-                        className="w-full"
-                        onClick={() => navigate("/auth")}
-                      >
-                        Get Started
-                      </Button>
                     </>
+                  )}
+                </div>
+                
+                <div className="p-4 border-t mt-auto">
+                  {user ? (
+                    <Button 
+                      variant="hero" 
+                      className="w-full py-6 text-lg"
+                      onClick={() => handleMobileNavigation("/essay-builder")}
+                    >
+                      New Essay
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant="hero" 
+                      className="w-full py-6 text-lg"
+                      onClick={() => handleMobileNavigation("/auth")}
+                    >
+                      Get Started
+                    </Button>
                   )}
                 </div>
               </div>

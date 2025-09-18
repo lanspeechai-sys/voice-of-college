@@ -88,12 +88,12 @@ export default function Auth() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="pt-24 pb-16 flex items-center justify-center min-h-[calc(100vh-6rem)]">
+      <div className="pt-20 sm:pt-24 pb-16 flex items-center justify-center min-h-[calc(100vh-5rem)] sm:min-h-[calc(100vh-6rem)]">
         <div className="w-full max-w-md mx-auto px-4">
           <Card>
             <CardHeader className="text-center">
-              <CardTitle>Welcome to Splennet</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-xl sm:text-2xl">Welcome to Splennet</CardTitle>
+              <CardDescription className="text-sm sm:text-base">
                 Sign in to your account or create a new one
               </CardDescription>
             </CardHeader>
@@ -107,47 +107,51 @@ export default function Auth() {
                 <TabsContent value="signup" className="space-y-4 mt-6">
                   <form onSubmit={handleSignUp} className="space-y-4">
                     <div>
-                      <Label htmlFor="signup-name">Full Name</Label>
+                      <Label htmlFor="signup-name" className="text-sm font-medium">Full Name</Label>
                       <Input
                         id="signup-name"
                         type="text"
                         value={formData.fullName}
                         onChange={(e) => handleInputChange('fullName', e.target.value)}
+                        className="h-12 text-base"
                         required
                       />
                     </div>
                     <div>
-                      <Label htmlFor="signup-email">Email</Label>
+                      <Label htmlFor="signup-email" className="text-sm font-medium">Email</Label>
                       <Input
                         id="signup-email"
                         type="email"
                         value={formData.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
+                        className="h-12 text-base"
                         required
                       />
                     </div>
                     <div>
-                      <Label htmlFor="signup-password">Password</Label>
+                      <Label htmlFor="signup-password" className="text-sm font-medium">Password</Label>
                       <Input
                         id="signup-password"
                         type="password"
                         value={formData.password}
                         onChange={(e) => handleInputChange('password', e.target.value)}
+                        className="h-12 text-base"
                         required
                       />
                     </div>
                     <div>
-                      <Label htmlFor="signup-confirm">Confirm Password</Label>
+                      <Label htmlFor="signup-confirm" className="text-sm font-medium">Confirm Password</Label>
                       <Input
                         id="signup-confirm"
                         type="password"
                         value={formData.confirmPassword}
                         onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                        className="h-12 text-base"
                         required
                       />
                     </div>
                     
-                    <Button type="submit" className="w-full" disabled={isLoading}>
+                    <Button type="submit" className="w-full h-12 text-base touch-manipulation" disabled={isLoading}>
                       {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                       Create Account
                     </Button>
@@ -157,26 +161,28 @@ export default function Auth() {
                 <TabsContent value="signin" className="space-y-4 mt-6">
                   <form onSubmit={handleSignIn} className="space-y-4">
                     <div>
-                      <Label htmlFor="signin-email">Email</Label>
+                      <Label htmlFor="signin-email" className="text-sm font-medium">Email</Label>
                       <Input
                         id="signin-email"
                         type="email"
                         value={formData.email}
                         onChange={(e) => handleInputChange('email', e.target.value)}
+                        className="h-12 text-base"
                         required
                       />
                     </div>
                     <div>
-                      <Label htmlFor="signin-password">Password</Label>
+                      <Label htmlFor="signin-password" className="text-sm font-medium">Password</Label>
                       <Input
                         id="signin-password"
                         type="password"
                         value={formData.password}
                         onChange={(e) => handleInputChange('password', e.target.value)}
+                        className="h-12 text-base"
                         required
                       />
                     </div>
-                    <Button type="submit" className="w-full" disabled={isLoading}>
+                    <Button type="submit" className="w-full h-12 text-base touch-manipulation" disabled={isLoading}>
                       {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                       Sign In
                     </Button>

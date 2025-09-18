@@ -575,7 +575,7 @@ export default function EssayBuilder() {
       <CardHeader className="text-center">
         <div className="flex items-center justify-center mb-4">
           <School className="h-8 w-8 text-primary mr-2" />
-          <CardTitle className="text-2xl">Choose Your School & Prompt</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl">Choose Your School & Prompt</CardTitle>
         </div>
         <CardDescription>
           Select your target university and the essay prompt you'd like to work on
@@ -583,7 +583,7 @@ export default function EssayBuilder() {
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <Label htmlFor="school-select" className="text-base font-medium">Target School</Label>
+          <Label htmlFor="school-select" className="text-sm sm:text-base font-medium">Target School</Label>
           <div className="mt-2 space-y-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -591,7 +591,7 @@ export default function EssayBuilder() {
                 placeholder="Search for your school..."
                 value={schoolSearch}
                 onChange={(e) => setSchoolSearch(e.target.value)}
-                className="pl-10 pr-10"
+                className="pl-10 pr-10 h-12 text-base"
               />
               {schoolSearch && (
                 <Button
@@ -605,13 +605,13 @@ export default function EssayBuilder() {
               )}
             </div>
             
-            <div className="max-h-48 overflow-y-auto border rounded-lg">
+            <div className="max-h-64 sm:max-h-48 overflow-y-auto border rounded-lg">
               {filteredSchools.length > 0 ? (
                 <div className="p-1">
                   {filteredSchools.map(school => (
                     <div
                       key={school.id}
-                      className={`p-3 rounded-md cursor-pointer transition-all text-sm ${
+                      className={`p-4 sm:p-3 rounded-md cursor-pointer transition-all text-sm sm:text-sm touch-manipulation ${
                         selectedSchool === school.id
                           ? "bg-primary text-primary-foreground"
                           : "hover:bg-muted"
@@ -623,7 +623,7 @@ export default function EssayBuilder() {
                   ))}
                 </div>
               ) : (
-                <div className="p-4 text-center text-muted-foreground text-sm">
+                <div className="p-6 sm:p-4 text-center text-muted-foreground text-sm">
                   No schools found. Try a different search term.
                 </div>
               )}
@@ -633,19 +633,19 @@ export default function EssayBuilder() {
 
         {selectedSchool && selectedSchool !== "custom" && (
           <div>
-            <Label className="text-base font-medium">Essay Prompt</Label>
+            <Label className="text-sm sm:text-base font-medium">Essay Prompt</Label>
             <div className="mt-2 space-y-3">
               {SCHOOLS.find(s => s.id === selectedSchool)?.prompts.map((prompt, index) => (
                 <div
                   key={index}
-                  className={`p-4 border rounded-lg cursor-pointer transition-all ${
+                  className={`p-4 sm:p-4 border rounded-lg cursor-pointer transition-all touch-manipulation ${
                     selectedPrompt === prompt
                       ? "border-primary bg-primary/5"
                       : "border-border hover:border-primary/50"
                   }`}
                   onClick={() => handlePromptSelect(prompt)}
                 >
-                  <p className="text-sm">{prompt}</p>
+                  <p className="text-sm sm:text-sm leading-relaxed">{prompt}</p>
                 </div>
               ))}
             </div>
@@ -654,13 +654,13 @@ export default function EssayBuilder() {
 
         {selectedSchool === "custom" && (
           <div>
-            <Label htmlFor="custom-prompt" className="text-base font-medium">Custom Essay Prompt</Label>
+            <Label htmlFor="custom-prompt" className="text-sm sm:text-base font-medium">Custom Essay Prompt</Label>
             <Textarea
               id="custom-prompt"
               placeholder="Enter your essay prompt or topic..."
               value={customPrompt}
               onChange={(e) => setCustomPrompt(e.target.value)}
-              className="mt-2 min-h-[100px]"
+              className="mt-2 min-h-[120px] sm:min-h-[100px] text-base"
             />
           </div>
         )}
@@ -676,7 +676,7 @@ export default function EssayBuilder() {
         <CardHeader className="text-center">
           <div className="flex items-center justify-center mb-4">
             <FileText className="h-8 w-8 text-primary mr-2" />
-            <CardTitle className="text-2xl">Share Your Story</CardTitle>
+            <CardTitle className="text-xl sm:text-2xl">Share Your Story</CardTitle>
           </div>
           <CardDescription>
             Question {currentQuestionIndex + 1} of {QUESTIONS.length}
@@ -684,7 +684,7 @@ export default function EssayBuilder() {
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="text-center">
-            <h3 className="text-lg font-medium mb-4">{currentQuestion.question}</h3>
+            <h3 className="text-base sm:text-lg font-medium mb-4 leading-relaxed px-2">{currentQuestion.question}</h3>
           </div>
 
           <div className="relative">
@@ -695,12 +695,12 @@ export default function EssayBuilder() {
                 (activeVoiceInput === currentQuestion.id ? " " + speechRecognition.transcript : "")
               }
               onChange={(e) => handleResponseChange(currentQuestion.id, e.target.value)}
-              className="min-h-[150px] pr-16"
+              className="min-h-[180px] sm:min-h-[150px] pr-16 text-base leading-relaxed"
             />
             <Button
               variant="ghost"
               size="sm"
-              className={`absolute top-3 right-3 h-10 w-10 rounded-full ${
+              className={`absolute top-3 right-3 h-12 w-12 sm:h-10 sm:w-10 rounded-full touch-manipulation ${
                 activeVoiceInput === currentQuestion.id ? "text-red-500" : "text-muted-foreground"
               } ${
                 activeVoiceInput === currentQuestion.id ? "bg-red-50 hover:bg-red-100" : "bg-gray-50 hover:bg-gray-100"
@@ -718,34 +718,36 @@ export default function EssayBuilder() {
               }
             >
               {activeVoiceInput === currentQuestion.id ? (
-                <MicOff className="h-5 w-5" />
+                <MicOff className="h-5 w-5 sm:h-5 sm:w-5" />
               ) : (
-                <Mic className="h-5 w-5" />
+                <Mic className="h-5 w-5 sm:h-5 sm:w-5" />
               )}
             </Button>
           </div>
           
           {activeVoiceInput === currentQuestion.id && (
-            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
+            <div className="flex items-center gap-2 p-4 sm:p-3 bg-red-50 border border-red-200 rounded-lg">
               <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-              <span className="text-sm text-red-700 font-medium">
+              <span className="text-sm sm:text-sm text-red-700 font-medium">
                 Recording... Speak clearly and your words will be added to your response.
               </span>
             </div>
           )}
 
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-0">
             <Button
               variant="outline"
+              className="w-full sm:w-auto order-2 sm:order-1"
               onClick={() => setCurrentQuestionIndex(Math.max(0, currentQuestionIndex - 1))}
               disabled={currentQuestionIndex === 0}
             >
               Previous Question
             </Button>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground order-1 sm:order-2">
               {currentQuestionIndex + 1} / {QUESTIONS.length}
             </span>
             <Button
+              className="w-full sm:w-auto order-3"
               onClick={() => setCurrentQuestionIndex(Math.min(QUESTIONS.length - 1, currentQuestionIndex + 1))}
               disabled={currentQuestionIndex === QUESTIONS.length - 1}
             >
@@ -762,32 +764,32 @@ export default function EssayBuilder() {
       <CardHeader className="text-center">
         <div className="flex items-center justify-center mb-4">
           <Users className="h-8 w-8 text-primary mr-2" />
-          <CardTitle className="text-2xl">Review Your Responses</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl">Review Your Responses</CardTitle>
         </div>
         <CardDescription>
           Make sure everything looks good before we generate your essay
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="p-4 bg-muted/50 rounded-lg">
-          <h4 className="font-medium mb-2">Selected School & Prompt:</h4>
-          <p className="text-sm text-muted-foreground mb-2">
+        <div className="p-4 sm:p-4 bg-muted/50 rounded-lg">
+          <h4 className="font-medium mb-2 text-sm sm:text-base">Selected School & Prompt:</h4>
+          <p className="text-sm sm:text-sm text-muted-foreground mb-2">
             {SCHOOLS.find(s => s.id === selectedSchool)?.name}
           </p>
-          <p className="text-sm italic">"{selectedPrompt || customPrompt}"</p>
+          <p className="text-sm sm:text-sm italic leading-relaxed">"{selectedPrompt || customPrompt}"</p>
         </div>
 
         <div className="space-y-4">
           {QUESTIONS.map((question, index) => (
-            <div key={question.id} className="p-4 border rounded-lg">
-              <h4 className="font-medium mb-2">{question.question}</h4>
-              <p className="text-sm text-muted-foreground">
+            <div key={question.id} className="p-4 sm:p-4 border rounded-lg">
+              <h4 className="font-medium mb-2 text-sm sm:text-base">{question.question}</h4>
+              <p className="text-sm sm:text-sm text-muted-foreground leading-relaxed">
                 {responses[question.id] || "No response provided"}
               </p>
               <Button
                 variant="ghost"
                 size="sm"
-                className="mt-2"
+                className="mt-3 sm:mt-2 touch-manipulation"
                 onClick={() => {
                   setCurrentQuestionIndex(index);
                   setStep(2);
@@ -807,7 +809,7 @@ export default function EssayBuilder() {
       <CardHeader className="text-center">
         <div className="flex items-center justify-center mb-4">
           <Sparkles className="h-8 w-8 text-primary mr-2" />
-          <CardTitle className="text-2xl">Generate Your Essay</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl">Generate Your Essay</CardTitle>
         </div>
         <CardDescription>
           Our AI will craft a compelling essay based on your responses
@@ -816,13 +818,13 @@ export default function EssayBuilder() {
       <CardContent className="space-y-6 text-center">
         {!isGenerating ? (
           <>
-            <div className="p-6 bg-gradient-primary/10 rounded-lg">
-              <h3 className="text-lg font-medium mb-2">Ready to Create Your Essay!</h3>
-              <p className="text-muted-foreground">
+            <div className="p-6 sm:p-6 bg-gradient-primary/10 rounded-lg">
+              <h3 className="text-base sm:text-lg font-medium mb-2">Ready to Create Your Essay!</h3>
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                 We'll use your responses to generate an authentic, compelling essay that captures your unique voice and story.
               </p>
             </div>
-            <Button onClick={handleGenerateEssay} size="lg" className="w-full">
+            <Button onClick={handleGenerateEssay} size="lg" className="w-full py-4 text-base touch-manipulation">
               Generate My Essay
               <Sparkles className="ml-2 h-5 w-5" />
             </Button>
@@ -830,8 +832,8 @@ export default function EssayBuilder() {
         ) : (
           <div className="space-y-4">
             <div className="animate-spin h-12 w-12 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
-            <h3 className="text-lg font-medium">Generating Your Essay...</h3>
-            <p className="text-muted-foreground">
+            <h3 className="text-base sm:text-lg font-medium">Generating Your Essay...</h3>
+            <p className="text-sm sm:text-base text-muted-foreground px-4">
               Our AI is carefully crafting your essay based on your unique story and experiences.
             </p>
           </div>
@@ -843,19 +845,19 @@ export default function EssayBuilder() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="pt-24 pb-8">
+      <div className="pt-20 sm:pt-24 pb-8">
         <div className="container mx-auto px-4">
           <div className="mb-8">
             <Button
               variant="ghost"
               onClick={() => navigate(-1)}
-              className="mb-4"
+              className="mb-4 touch-manipulation"
             >
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back
             </Button>
             
-            <div className="max-w-2xl mx-auto">
+            <div className="max-w-2xl mx-auto px-2">
               <Progress value={progress} className="mb-4" />
               <p className="text-center text-sm text-muted-foreground">
                 Step {step} of {totalSteps}
@@ -868,9 +870,10 @@ export default function EssayBuilder() {
           {step === 3 && renderStep3()}
           {step === 4 && renderStep4()}
 
-          <div className="flex justify-between max-w-2xl mx-auto mt-8">
+          <div className="flex flex-col sm:flex-row justify-between gap-4 sm:gap-0 max-w-2xl mx-auto mt-8 px-2">
             <Button
               variant="outline"
+              className="w-full sm:w-auto touch-manipulation"
               onClick={prevStep}
               disabled={step === 1}
             >
@@ -879,6 +882,7 @@ export default function EssayBuilder() {
             </Button>
             
             <Button
+              className="w-full sm:w-auto touch-manipulation"
               onClick={nextStep}
               disabled={
                 step === totalSteps ||

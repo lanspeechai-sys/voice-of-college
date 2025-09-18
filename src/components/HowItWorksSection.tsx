@@ -43,20 +43,20 @@ const HowItWorksSection = () => {
               Works
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
             Four simple steps to create standout college essays that reflect your authentic voice
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
           {steps.map((step, index) => (
             <div key={index} className="relative">
               {/* Connecting line */}
-              {index < steps.length - 1 && (
+              {index < steps.length - 1 && index % 2 === 1 && (
                 <div className="hidden lg:block absolute top-16 left-full w-full h-0.5 bg-gradient-to-r from-border to-transparent z-0" />
               )}
               
-              <Card className="relative z-10 text-center hover:shadow-card transition-all duration-300 border-0 bg-background">
+              <Card className="relative z-10 text-center hover:shadow-card transition-all duration-300 border-0 bg-background touch-manipulation">
                 <CardHeader>
                   <div className="mx-auto w-16 h-16 rounded-full bg-gradient-primary flex items-center justify-center mb-4">
                     <step.icon className="h-8 w-8 text-white" />
@@ -64,10 +64,10 @@ const HowItWorksSection = () => {
                   <div className={`text-sm font-semibold ${step.color} mb-2`}>
                     STEP {step.step}
                   </div>
-                  <CardTitle className="text-lg">{step.title}</CardTitle>
+                  <CardTitle className="text-base sm:text-lg">{step.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-sm">
+                  <CardDescription className="text-xs sm:text-sm">
                     {step.description}
                   </CardDescription>
                 </CardContent>

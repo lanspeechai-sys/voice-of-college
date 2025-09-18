@@ -19,14 +19,14 @@ const CTASection = () => {
 
       <div className="container mx-auto px-4 text-center relative z-10">
         <div className="max-w-3xl mx-auto space-y-8">
-          <h2 className="text-3xl md:text-5xl font-bold leading-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-bold leading-tight">
             Ready to Write Your{" "}
             <span className="bg-gradient-primary bg-clip-text text-transparent">
               Dream School Essay?
             </span>
           </h2>
           
-          <p className="text-xl text-muted-foreground">
+          <p className="text-lg sm:text-xl text-muted-foreground px-4">
             Join thousands of students who've already crafted compelling essays with EssayAI. 
             Start your journey to college admission success today.
           </p>
@@ -35,13 +35,13 @@ const CTASection = () => {
             <Button 
               variant="hero" 
               size="lg" 
-              className="group"
+              className="group w-full sm:w-auto py-4 text-base touch-manipulation"
               onClick={() => navigate("/auth")}
             >
               Start Writing Now
               <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <Button variant="outline" size="lg">
+            <Button variant="outline" size="lg" className="w-full sm:w-auto py-4 text-base touch-manipulation">
               <a href="https://www.youtube.com/@splennet" target="_blank" rel="noopener noreferrer" className="flex items-center">
                 Watch Demo
               </a>

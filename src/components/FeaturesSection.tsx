@@ -51,22 +51,22 @@ const FeaturesSection = () => {
               Stand Out
             </span>
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
             Powerful AI tools designed to help you create compelling essays that showcase your unique story
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="group hover:shadow-card transition-all duration-300 border-0 bg-background">
+            <Card key={index} className="group hover:shadow-card transition-all duration-300 border-0 bg-background touch-manipulation">
               <CardHeader>
                 <div className={`w-12 h-12 rounded-lg bg-gradient-to-br ${feature.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
                   <feature.icon className="h-6 w-6 text-white" />
                 </div>
-                <CardTitle className="text-xl">{feature.title}</CardTitle>
+                <CardTitle className="text-lg sm:text-xl">{feature.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription className="text-base">
+                <CardDescription className="text-sm sm:text-base">
                   {feature.description}
                 </CardDescription>
               </CardContent>
