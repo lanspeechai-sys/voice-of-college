@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { generateEssay as generateEssayFromGemini } from "@/lib/gemini";
 import { saveEssay, getCurrentUser, checkUsageLimit, incrementUserUsage, trackUsage } from "@/lib/supabase";
