@@ -97,10 +97,10 @@ const UsageIndicator = memo(() => {
   }
 
   return (
-    <Card className={`${isAtLimit ? 'border-destructive' : isNearLimit ? 'border-yellow-500' : 'border-border'}`}>
+    <Card className={`${isAtLimit ? 'border-destructive' : isNearLimit ? 'border-yellow-500' : 'border-border'} w-full`}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium">Free Plan Usage</CardTitle>
+          <CardTitle className="text-sm sm:text-sm font-medium">Free Plan Usage</CardTitle>
           {isAtLimit && (
             <Badge variant="destructive" className="flex items-center gap-1">
               <AlertTriangle className="h-3 w-3" />
@@ -118,7 +118,7 @@ const UsageIndicator = memo(() => {
         <div>
           <div className="flex justify-between text-sm mb-1">
             <span>Essays Generated</span>
-            <span className={essayProgress >= 100 ? 'text-destructive font-medium' : ''}>
+            <span className={`text-xs sm:text-sm ${essayProgress >= 100 ? 'text-destructive font-medium' : ''}`}>
               {usage.essays_generated} / {usage.plan_limits.essays}
             </span>
           </div>
@@ -131,7 +131,7 @@ const UsageIndicator = memo(() => {
         <div>
           <div className="flex justify-between text-sm mb-1">
             <span>Human Reviews</span>
-            <span className={reviewProgress >= 100 ? 'text-destructive font-medium' : ''}>
+            <span className={`text-xs sm:text-sm ${reviewProgress >= 100 ? 'text-destructive font-medium' : ''}`}>
               {usage.human_reviews_used} / {usage.plan_limits.human_reviews}
             </span>
           </div>
@@ -147,7 +147,7 @@ const UsageIndicator = memo(() => {
               <Button 
                 variant="hero" 
                 size="sm" 
-                className="w-full"
+                className="w-full touch-manipulation"
                 onClick={() => navigate('/pricing')}
               >
                 {isAtLimit ? 'Upgrade to Continue' : 'Upgrade Plan'}
@@ -156,7 +156,7 @@ const UsageIndicator = memo(() => {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="w-full text-xs"
+                  className="w-full text-xs touch-manipulation"
                   onClick={() => navigate('/subscription-management')}
                 >
                   Manage Billing

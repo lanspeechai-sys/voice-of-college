@@ -84,27 +84,27 @@ const UpgradeModal = memo(({ isOpen, onClose, actionType, remaining }: UpgradeMo
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <div className="flex items-center gap-2 mb-2">
             <AlertTriangle className="h-5 w-5 text-yellow-500" />
-            <DialogTitle>{getTitle()}</DialogTitle>
+            <DialogTitle className="text-lg sm:text-xl">{getTitle()}</DialogTitle>
           </div>
-          <DialogDescription>
+          <DialogDescription className="text-sm sm:text-base">
             {getDescription()}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid md:grid-cols-2 gap-4 mt-6">
+        <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-4 mt-6">
           <Card className="border-primary/20">
             <CardHeader>
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="h-5 w-5 text-primary" />
-                <CardTitle className="text-lg">Monthly Pro</CardTitle>
+                <CardTitle className="text-base sm:text-lg">Monthly Pro</CardTitle>
                 <Badge variant="secondary">Popular</Badge>
               </div>
-              <div className="text-2xl font-bold text-primary">$20<span className="text-sm font-normal">/month</span></div>
-              <CardDescription>Perfect for active essay writers</CardDescription>
+              <div className="text-xl sm:text-2xl font-bold text-primary">$20<span className="text-sm font-normal">/month</span></div>
+              <CardDescription className="text-sm">Perfect for active essay writers</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center gap-2 text-sm">
@@ -122,6 +122,7 @@ const UpgradeModal = memo(({ isOpen, onClose, actionType, remaining }: UpgradeMo
               <Button 
                 className="w-full mt-4" 
                 onClick={() => handleUpgrade('monthlyPro')}
+                size="lg"
                 disabled={isLoading}
               >
                 {isLoading ? 'Processing...' : 'Upgrade to Monthly'}
@@ -133,11 +134,11 @@ const UpgradeModal = memo(({ isOpen, onClose, actionType, remaining }: UpgradeMo
             <CardHeader>
               <div className="flex items-center gap-2 mb-2">
                 <Crown className="h-5 w-5 text-secondary" />
-                <CardTitle className="text-lg">Yearly Pro</CardTitle>
+                <CardTitle className="text-base sm:text-lg">Yearly Pro</CardTitle>
                 <Badge variant="secondary" className="bg-green-100 text-green-800">Save $140</Badge>
               </div>
-              <div className="text-2xl font-bold text-secondary">$100<span className="text-sm font-normal">/year</span></div>
-              <CardDescription>Best value for serious applicants</CardDescription>
+              <div className="text-xl sm:text-2xl font-bold text-secondary">$100<span className="text-sm font-normal">/year</span></div>
+              <CardDescription className="text-sm">Best value for serious applicants</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-center gap-2 text-sm">
@@ -159,6 +160,7 @@ const UpgradeModal = memo(({ isOpen, onClose, actionType, remaining }: UpgradeMo
               <Button 
                 variant="secondary" 
                 className="w-full mt-4"
+                size="lg"
                 onClick={() => handleUpgrade('yearlyPro')}
                 disabled={isLoading}
               >
@@ -168,8 +170,13 @@ const UpgradeModal = memo(({ isOpen, onClose, actionType, remaining }: UpgradeMo
           </Card>
         </div>
 
-        <div className="mt-6 text-center">
-          <Button variant="ghost" onClick={onClose} disabled={remaining === 0}>
+        <div className="mt-6 text-center border-t pt-4">
+          <Button 
+            variant="ghost" 
+            onClick={onClose} 
+            disabled={remaining === 0}
+            className="w-full sm:w-auto touch-manipulation"
+          >
             {remaining === 0 ? 'Upgrade Required' : 'Maybe Later'}
           </Button>
         </div>
