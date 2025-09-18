@@ -175,5 +175,6 @@ const AuthModal = memo(({ isOpen, onClose, onSuccess }: AuthModalProps) => {
       </DialogContent>
     </Dialog>
   );
-}
-)
+});
+
+AuthModal.displayName = "AuthModal";
