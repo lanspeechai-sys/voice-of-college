@@ -1,5 +1,41 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
+// Rate limiting for API calls
+const API_RATE_LIMIT = 5; // requests per minute
+const rateLimitMap = new Map<string, number[]>();
+
+const checkRateLimit = (userId: string): boolean => {
+  const now = Date.now();
+  const userRequests = rateLimitMap.get(userId) || [];
+  
+  // Remove requests older than 1 minute
+  const recentRequests = userRequests.filter(time => now - time < 60000);
+  
+  if (recentRequests.length >= API_RATE_LIMIT) {
+    return false;
+  }
+  
+  recentRequests.push(now);
+  rateLimitMap.set(userId, recentRequests);
+  return true;
+};
+
+// Input validation
+const validateEssayRequest = (request: EssayGenerationRequest): void => {
+  if (!request.school?.trim()) {
+    throw new Error('School name is required');
+  }
+  if (!request.prompt?.trim()) {
+    throw new Error('Essay prompt is required');
+  }
+  if (!request.responses || Object.keys(request.responses).length === 0) {
+    throw new Error('Student responses are required');
+  }
+  if (request.wordLimit && (request.wordLimit < 100 || request.wordLimit > 2000)) {
+    throw new Error('Word limit must be between 100 and 2000');
+  }
+};
+
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
 
 export interface EssayGenerationRequest {
@@ -7,10 +43,19 @@ export interface EssayGenerationRequest {
   prompt: string;
   responses: Record<string, string>;
   wordLimit?: number;
+  userId?: string;
 }
 
 export async function generateEssay(request: EssayGenerationRequest): Promise<string> {
-  const { school, prompt, responses, wordLimit = 650 } = request;
+  const { school, prompt, responses, wordLimit = 650, userId } = request;
+  
+  // Validate input
+  validateEssayRequest(request);
+  
+  // Check rate limiting
+  if (userId && !checkRateLimit(userId)) {
+    throw new Error('Rate limit exceeded. Please wait before generating another essay.');
+  }
   
   if (!import.meta.env.VITE_GEMINI_API_KEY) {
     throw new Error('Gemini API key is not configured. Please check your environment variables.');
@@ -61,10 +106,18 @@ Create an essay that weaves together these elements into a compelling narrative 
       throw new Error('No content generated from Gemini API');
     }
     
+    // Basic content validation
+    if (text.length < 100) {
+      throw new Error('Generated essay is too short. Please try again.');
+    }
+    
     return text;
   } catch (error) {
     console.error('Error generating essay with Gemini:', error);
-    throw new Error('Failed to generate essay. Please check your API key and try again.');
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error('Failed to generate essay. Please try again.');
   }
 }
 

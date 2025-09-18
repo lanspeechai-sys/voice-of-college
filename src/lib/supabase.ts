@@ -8,10 +8,25 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.error('Missing Supabase environment variables. Please check your .env file.');
 }
 
+// Input validation and sanitization
+const sanitizeInput = (input: string): string => {
+  return input.trim().replace(/[<>]/g, '');
+};
+
+const validateEmail = (email: string): boolean => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const validatePassword = (password: string): boolean => {
+  return password.length >= 6;
+};
+
 export const supabase = createClient(supabaseUrl || '', supabaseAnonKey || '', {
   auth: {
     persistSession: true,
     autoRefreshToken: true,
+    detectSessionInUrl: false, // Security: prevent session hijacking
   },
   global: {
     headers: {
@@ -129,13 +144,27 @@ export const checkUsageLimit = async (userId: string, actionType: 'essay' | 'hum
 
 // Auth functions
 export const signUp = async (email: string, password: string, fullName: string) => {
+  // Input validation
+  if (!validateEmail(email)) {
+    throw new Error('Invalid email format');
+  }
+  
+  if (!validatePassword(password)) {
+    throw new Error('Password must be at least 6 characters');
+  }
+  
+  const sanitizedName = sanitizeInput(fullName);
+  if (!sanitizedName) {
+    throw new Error('Full name is required');
+  }
+
   // First, create the user with minimal data
   const { data, error } = await supabase.auth.signUp({
-    email,
+    email: email.toLowerCase().trim(),
     password,
     options: {
       data: {
-        full_name: fullName,
+        full_name: sanitizedName,
       },
     },
   });
@@ -145,7 +174,7 @@ export const signUp = async (email: string, password: string, fullName: string) 
   // Send welcome email if user was created successfully
   if (data.user && !error) {
     try {
-      await sendWelcomeNotification(data.user.id, email, fullName);
+      await sendWelcomeNotification(data.user.id, email, sanitizedName);
     } catch (emailError) {
       console.error('Failed to send welcome email:', emailError);
       // Don't throw error as this shouldn't block user registration
@@ -156,8 +185,13 @@ export const signUp = async (email: string, password: string, fullName: string) 
 };
 
 export const signIn = async (email: string, password: string) => {
+  // Input validation
+  if (!validateEmail(email)) {
+    throw new Error('Invalid email format');
+  }
+  
   const { data, error } = await supabase.auth.signInWithPassword({
-    email,
+    email: email.toLowerCase().trim(),
     password,
   });
   return { data, error };
@@ -211,18 +245,40 @@ export const getCurrentUser = async () => {
 
 // Essay functions
 export const saveEssay = async (essay: Omit<Essay, 'id' | 'created_at' | 'updated_at'>) => {
+  // Sanitize essay content
+  const sanitizedEssay = {
+    ...essay,
+    school: sanitizeInput(essay.school),
+    prompt: sanitizeInput(essay.prompt),
+    generated_essay: sanitizeInput(essay.generated_essay),
+    responses: Object.fromEntries(
+      Object.entries(essay.responses).map(([key, value]) => [
+        sanitizeInput(key),
+        sanitizeInput(value)
+      ])
+    )
+  };
+
   const { data, error } = await supabase
     .from('essays')
-    .insert([essay])
+    .insert([sanitizedEssay])
     .select()
     .single();
   return { data, error };
 };
 
 export const updateEssay = async (id: string, updates: Partial<Essay>) => {
+  // Sanitize updates
+  const sanitizedUpdates = Object.fromEntries(
+    Object.entries(updates).map(([key, value]) => [
+      key,
+      typeof value === 'string' ? sanitizeInput(value) : value
+    ])
+  );
+
   const { data, error } = await supabase
     .from('essays')
-    .update({ ...updates, updated_at: new Date().toISOString() })
+    .update({ ...sanitizedUpdates, updated_at: new Date().toISOString() })
     .eq('id', id)
     .select()
     .single();

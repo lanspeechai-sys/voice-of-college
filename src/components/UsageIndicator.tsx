@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +17,7 @@ interface UsageData {
   };
 }
 
-export default function UsageIndicator() {
+const UsageIndicator = memo(() => {
   const [usage, setUsage] = useState<UsageData | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export default function UsageIndicator() {
     loadUsage();
   }, []);
 
-  const loadUsage = async () => {
+  const loadUsage = useCallback(async () => {
     try {
       const user = await getCurrentUser();
       if (!user) return;
@@ -40,7 +40,7 @@ export default function UsageIndicator() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   if (loading || !usage) {
     return null;
@@ -168,4 +168,3 @@ export default function UsageIndicator() {
       </CardContent>
     </Card>
   );
-}

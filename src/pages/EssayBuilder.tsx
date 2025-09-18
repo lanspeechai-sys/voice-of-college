@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { generateEssay as generateEssayFromGemini } from "@/lib/gemini";
 import { saveEssay, getCurrentUser, checkUsageLimit, incrementUserUsage, trackUsage } from "@/lib/supabase";
@@ -15,7 +15,6 @@ import { ArrowLeft, ArrowRight, Mic, MicOff, School, FileText, Users, Sparkles, 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import UpgradeModal from "@/components/UpgradeModal";
-import { v4 as uuidv4 } from 'uuid';
 
 interface SchoolOption {
   id: string;
@@ -426,38 +425,38 @@ export default function EssayBuilder() {
   });
 
   // Filter schools based on search
-  useEffect(() => {
+  const filteredSchools = useMemo(() => {
     if (schoolSearch.trim() === "") {
-      setFilteredSchools(SCHOOLS);
+      return SCHOOLS;
     } else {
-      const filtered = SCHOOLS.filter(school =>
+      return SCHOOLS.filter(school =>
         school.name.toLowerCase().includes(schoolSearch.toLowerCase())
       );
-      setFilteredSchools(filtered);
     }
   }, [schoolSearch]);
+
   const totalSteps = 4;
   const progress = (step / totalSteps) * 100;
 
-  const handleSchoolSelect = (schoolId: string) => {
+  const handleSchoolSelect = useCallback((schoolId: string) => {
     setSelectedSchool(schoolId);
     setSelectedPrompt("");
     setCustomPrompt("");
     setSchoolSearch(""); // Clear search when school is selected
-  };
+  }, []);
 
-  const handlePromptSelect = (prompt: string) => {
+  const handlePromptSelect = useCallback((prompt: string) => {
     setSelectedPrompt(prompt);
-  };
+  }, []);
 
-  const handleResponseChange = (questionId: string, response: string) => {
+  const handleResponseChange = useCallback((questionId: string, response: string) => {
     setResponses(prev => ({
       ...prev,
       [questionId]: response
     }));
-  };
+  }, []);
 
-  const toggleVoiceInput = (questionId: string) => {
+  const toggleVoiceInput = useCallback((questionId: string) => {
     if (activeVoiceInput === questionId) {
       // Stop recording
       speechRecognition.stopListening();
@@ -478,25 +477,36 @@ export default function EssayBuilder() {
       speechRecognition.startListening({ continuous: true });
       setActiveVoiceInput(questionId);
     }
-  };
+  }, [activeVoiceInput, speechRecognition, responses, handleResponseChange]);
 
-  const nextStep = () => {
+  const nextStep = useCallback(() => {
     if (step < totalSteps) {
       setStep(step + 1);
     }
-  };
+  }, [step, totalSteps]);
 
-  const prevStep = () => {
+  const prevStep = useCallback(() => {
     if (step > 1) {
       setStep(step - 1);
     }
-  };
+  }, [step]);
 
-  const canProceedFromStep1 = selectedSchool && (selectedPrompt || (selectedSchool === "custom" && customPrompt));
-  const canProceedFromStep2 = responses[QUESTIONS[currentQuestionIndex]?.id]?.trim().length > 0;
-  const allQuestionsAnswered = QUESTIONS.every(q => responses[q.id]?.trim().length > 0);
+  const canProceedFromStep1 = useMemo(() => 
+    selectedSchool && (selectedPrompt || (selectedSchool === "custom" && customPrompt)),
+    [selectedSchool, selectedPrompt, customPrompt]
+  );
+  
+  const canProceedFromStep2 = useMemo(() => 
+    responses[QUESTIONS[currentQuestionIndex]?.id]?.trim().length > 0,
+    [responses, currentQuestionIndex]
+  );
+  
+  const allQuestionsAnswered = useMemo(() => 
+    QUESTIONS.every(q => responses[q.id]?.trim().length > 0),
+    [responses]
+  );
 
-  const handleGenerateEssay = async () => {
+  const handleGenerateEssay = useCallback(async () => {
     if (!user) {
       toast.error("Please sign in to generate essays");
       return;
@@ -518,6 +528,7 @@ export default function EssayBuilder() {
         prompt: selectedPrompt || customPrompt,
         responses,
         wordLimit: 650
+        userId: user.id
       });
 
       // Save essay if user is authenticated
@@ -557,7 +568,7 @@ export default function EssayBuilder() {
       toast.error("Failed to generate essay. Please check your API key and try again.");
       console.error('Essay generation error:', error);
     }
-  };
+  }, [user, selectedSchool, selectedPrompt, customPrompt, responses, navigate]);
 
   const renderStep1 = () => (
     <Card className="w-full max-w-2xl mx-auto">

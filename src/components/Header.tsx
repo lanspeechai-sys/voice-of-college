@@ -3,12 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { getCurrentUser, signOut } from "@/lib/supabase";
 import AuthModal from "./AuthModal";
 import { toast } from "@/components/ui/sonner";
 
-const Header = () => {
+const Header = memo(() => {
   const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -18,7 +18,7 @@ const Header = () => {
     loadUser();
   }, []);
 
-  const loadUser = async () => {
+  const loadUser = useCallback(async () => {
     try {
       const currentUser = await getCurrentUser();
       setUser(currentUser);
@@ -27,9 +27,9 @@ const Header = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const handleSignOut = async () => {
+  const handleSignOut = useCallback(async () => {
     try {
       await signOut();
       setUser(null);
@@ -38,7 +38,7 @@ const Header = () => {
     } catch (error) {
       toast.error("Failed to sign out");
     }
-  };
+  }, [navigate]);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -177,6 +177,8 @@ const Header = () => {
       </div>
     </header>
   );
-};
+});
+
+Header.displayName = "Header";
 
 export default Header;

@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Download, Share2, Edit3, Users, CheckCircle, Copy } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
-import { v4 as uuidv4 } from 'uuid';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -104,8 +103,6 @@ export default function EssayResult() {
         text: essay,
       });
     } else {
-      // Generate shareable link
-      const shareToken = uuidv4();
       // TODO: Implement sharing with token
       toast.success("Sharing feature coming soon!");
     }

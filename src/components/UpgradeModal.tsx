@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,10 +15,10 @@ interface UpgradeModalProps {
   remaining: number;
 }
 
-export default function UpgradeModal({ isOpen, onClose, actionType, remaining }: UpgradeModalProps) {
+const UpgradeModal = memo(({ isOpen, onClose, actionType, remaining }: UpgradeModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleUpgrade = async (productKey: 'monthlyPro' | 'yearlyPro') => {
+  const handleUpgrade = useCallback(async (productKey: 'monthlyPro' | 'yearlyPro') => {
     setIsLoading(true);
     
     try {
@@ -64,23 +64,23 @@ export default function UpgradeModal({ isOpen, onClose, actionType, remaining }:
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const getTitle = () => {
+  const getTitle = useCallback(() => {
     if (remaining === 0) {
       return actionType === 'essay' ? 'Essay Limit Reached' : 'Human Review Limit Reached';
     }
     return 'Upgrade to Continue';
-  };
+  }, [remaining, actionType]);
 
-  const getDescription = () => {
+  const getDescription = useCallback(() => {
     if (remaining === 0) {
       return actionType === 'essay' 
         ? "You've used all your free essays. Upgrade to continue creating essays."
         : "You've used all your free human reviews. Upgrade to get professional feedback.";
     }
     return `You have ${remaining} ${actionType === 'essay' ? 'essay' : 'human review'}${remaining === 1 ? '' : 's'} remaining on your free plan.`;
-  };
+  }, [remaining, actionType]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -176,4 +176,3 @@ export default function UpgradeModal({ isOpen, onClose, actionType, remaining }:
       </DialogContent>
     </Dialog>
   );
-}

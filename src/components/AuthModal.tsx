@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback, memo } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,7 @@ interface AuthModalProps {
   onSuccess: () => void;
 }
 
-export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps) {
+const AuthModal = memo(({ isOpen, onClose, onSuccess }: AuthModalProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -23,11 +23,11 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
     confirmPassword: ''
   });
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = useCallback((field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-  };
+  }, []);
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleSignIn = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
@@ -45,9 +45,9 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [formData.email, formData.password, onSuccess, onClose]);
 
-  const handleSignUp = async (e: React.FormEvent) => {
+  const handleSignUp = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (formData.password !== formData.confirmPassword) {
@@ -76,7 +76,7 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [formData, onSuccess, onClose]);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -175,4 +175,3 @@ export default function AuthModal({ isOpen, onClose, onSuccess }: AuthModalProps
       </DialogContent>
     </Dialog>
   );
-}
