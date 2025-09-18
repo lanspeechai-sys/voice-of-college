@@ -176,3 +176,5 @@ const UpgradeModal = memo(({ isOpen, onClose, actionType, remaining }: UpgradeMo
       </DialogContent>
     </Dialog>
   );
+}
+)
