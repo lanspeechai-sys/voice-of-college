@@ -1,11 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 import { sendWelcomeNotification, checkAndNotifyUsageLimit } from './notifications';
+import { PLAN_LIMITS } from '@/stripe-config';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables. Please check your .env file.');
+  throw new Error('Missing Supabase environment variables. Please check your .env file and restart the development server.');
 }
 
 // Input validation and sanitization
@@ -89,10 +90,31 @@ export const getUserUsage = async (userId: string) => {
     .from('user_profiles')
     .select('essays_generated, human_reviews_used, subscription_plan, plan_limits')
     .eq('user_id', userId)
-    .single();
+    .maybeSingle();
     
   if (profileError) {
     return { data: null, error: profileError };
+  }
+  
+  // If no profile exists, create one with default values
+  if (!profile) {
+    const { data: newProfile, error: createError } = await supabase
+      .from('user_profiles')
+      .insert({
+        user_id: userId,
+        subscription_plan: 'free',
+        essays_generated: 0,
+        human_reviews_used: 0,
+        plan_limits: PLAN_LIMITS.free
+      })
+      .select('essays_generated, human_reviews_used, subscription_plan, plan_limits')
+      .single();
+    
+    if (createError) {
+      return { data: null, error: createError };
+    }
+    
+    return { data: newProfile, error: null };
   }
   
   return { data: profile, error: null };
@@ -228,6 +250,47 @@ export const getCurrentUser = async () => {
         email: user.email,
         id: user.id
       };
+    }
+    
+    // If no profile exists, create one with default values
+    if (!profile) {
+      try {
+        const { data: newProfile, error: createError } = await supabase
+          .from('user_profiles')
+          .insert({
+            user_id: user.id,
+            full_name: user.user_metadata?.full_name || '',
+            subscription_plan: 'free',
+            essays_generated: 0,
+            human_reviews_used: 0,
+            plan_limits: PLAN_LIMITS.free
+          })
+          .select('*')
+          .single();
+        
+        if (createError) {
+          console.error('Error creating user profile:', createError);
+          return {
+            ...user,
+            email: user.email,
+            id: user.id
+          };
+        }
+        
+        return {
+          ...user,
+          ...newProfile,
+          email: user.email,
+          id: user.id
+        };
+      } catch (error) {
+        console.error('Error in profile creation:', error);
+        return {
+          ...user,
+          email: user.email,
+          id: user.id
+        };
+      }
     }
 
     // Merge auth user data with profile data
