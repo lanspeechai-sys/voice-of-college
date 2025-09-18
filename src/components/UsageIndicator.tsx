@@ -152,7 +152,7 @@ const UsageIndicator = memo(() => {
               >
                 {isAtLimit ? 'Upgrade to Continue' : 'Upgrade Plan'}
               </Button>
-              {user?.subscription_plan !== 'free' && (
+              {usage?.subscription_plan !== 'free' && (
                 <Button 
                   variant="ghost" 
                   size="sm" 
@@ -168,3 +168,6 @@ const UsageIndicator = memo(() => {
       </CardContent>
     </Card>
   );
+});
+
+export default UsageIndicator;
