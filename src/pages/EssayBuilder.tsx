@@ -417,7 +417,6 @@ export default function EssayBuilder() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [usageCheck, setUsageCheck] = useState<any>(null);
   const [schoolSearch, setSchoolSearch] = useState<string>("");
-  const [filteredSchools, setFilteredSchools] = useState<SchoolOption[]>(SCHOOLS);
 
   // Check authentication on component mount
   useState(() => {
@@ -527,7 +526,7 @@ export default function EssayBuilder() {
         school: SCHOOLS.find(s => s.id === selectedSchool)?.name || selectedSchool,
         prompt: selectedPrompt || customPrompt,
         responses,
-        wordLimit: 650
+        wordLimit: 650,
         userId: user.id
       });
 
