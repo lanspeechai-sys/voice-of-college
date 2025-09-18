@@ -178,3 +178,5 @@ const AuthModal = memo(({ isOpen, onClose, onSuccess }: AuthModalProps) => {
 });
 
 AuthModal.displayName = "AuthModal";
+
+export default AuthModal;
