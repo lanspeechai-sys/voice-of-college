@@ -81,6 +81,9 @@ const Header = memo(() => {
               <Button variant="ghost" size="sm" onClick={() => navigate("/human-review")} className="hidden lg:inline-flex">
                 Human Review
               </Button>
+              <Button variant="ghost" size="sm" onClick={() => navigate("/ai-humanizer")} className="hidden lg:inline-flex">
+                AI Humanizer
+              </Button>
               <Button variant="ghost" size="sm" onClick={() => navigate("/reviewer-dashboard")} className="hidden xl:inline-flex">
                 Reviewer
               </Button>
@@ -179,6 +182,13 @@ const Header = memo(() => {
                         onClick={() => handleMobileNavigation("/human-review")}
                       >
                         Human Review
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start py-6 text-lg" 
+                        onClick={() => handleMobileNavigation("/ai-humanizer")}
+                      >
+                        AI Humanizer
                       </Button>
                       <Button 
                         variant="ghost" 

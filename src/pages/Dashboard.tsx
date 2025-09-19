@@ -91,6 +91,14 @@ export default function Dashboard() {
                     Manage Billing
                   </Button>
                   <Button 
+                    variant="outline" 
+                    onClick={() => navigate('/ai-humanizer')} 
+                    className="gap-2 w-full sm:w-auto touch-manipulation"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    AI Humanizer
+                  </Button>
+                  <Button 
                     onClick={() => navigate('/essay-builder')} 
                     className="gap-2 w-full sm:w-auto touch-manipulation"
                   >

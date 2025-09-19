@@ -175,6 +175,15 @@ export default function EssayResult() {
                       <Share2 className="h-4 w-4 mr-2" />
                       Share
                     </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => navigate('/ai-humanizer')}
+                      className="flex-1 sm:flex-none touch-manipulation"
+                    >
+                      <Sparkles className="h-4 w-4 mr-2" />
+                      Humanize
+                    </Button>
                   </div>
                 </div>
               </CardHeader>
