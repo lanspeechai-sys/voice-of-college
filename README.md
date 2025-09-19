@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+# Welcome to Splennet
 
 ## Splennet - AI-Powered College Essay Assistant
 
