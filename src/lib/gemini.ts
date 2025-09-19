@@ -159,3 +159,57 @@ Provide an improved version that addresses the feedback while keeping the studen
     throw new Error('Failed to improve essay. Please try again.');
   }
 }
+
+export async function humanizeText(text: string): Promise<string> {
+  if (!import.meta.env.VITE_GEMINI_API_KEY) {
+    throw new Error('Gemini API key is not configured. Please check your environment variables.');
+  }
+  
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  
+  const systemPrompt = `You are an expert text humanizer that transforms AI-generated content into natural, human-like writing. Your goal is to make the text completely undetectable by AI detection systems while preserving the original meaning and improving readability.
+
+CRITICAL REQUIREMENTS:
+1. Rewrite the text to sound completely natural and human-written
+2. Vary sentence structures and lengths for organic flow
+3. Add subtle imperfections and natural language patterns
+4. Use conversational tone and natural transitions
+5. Include varied vocabulary and authentic expression
+6. Maintain the original meaning and key points
+7. Ensure the text passes all AI detection tools
+8. Keep the same approximate length as the original
+9. Add natural pauses and emphasis through punctuation
+10. Use authentic human writing patterns and rhythms
+
+The humanized text MUST:
+- Feel completely natural and authentic
+- Pass Turnitin, ZeroGPT, Grammarly AI Checker, and other detection systems
+- Maintain the original message and intent
+- Sound like it was written by a real person
+- Have natural flow and readability`;
+
+  const userPrompt = `Please humanize the following AI-generated text, making it sound completely natural and human-written while preserving the original meaning:
+
+${text}
+
+Transform this into natural, human-like writing that will pass all AI detection systems.`;
+
+  try {
+    const result = await model.generateContent([
+      { text: systemPrompt },
+      { text: userPrompt }
+    ]);
+    
+    const response = await result.response;
+    const humanizedText = response.text();
+    
+    if (!humanizedText) {
+      throw new Error('No content generated from Gemini API');
+    }
+    
+    return humanizedText;
+  } catch (error) {
+    console.error('Error humanizing text with Gemini:', error);
+    throw new Error('Failed to humanize text. Please try again.');
+  }
+}

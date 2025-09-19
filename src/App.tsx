@@ -16,6 +16,7 @@ const EssayBuilder = lazy(() => import("./pages/EssayBuilder"));
 const EssayResult = lazy(() => import("./pages/EssayResult"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
 const HumanReview = lazy(() => import("./pages/HumanReview"));
+const AIHumanizer = lazy(() => import("./pages/AIHumanizer"));
 const Terms = lazy(() => import("./pages/Terms"));
 const Privacy = lazy(() => import("./pages/Privacy"));
 const Refunds = lazy(() => import("./pages/Refunds"));
@@ -76,6 +77,11 @@ const App = () => (
               <Route path="/human-review" element={
                 <ProtectedRoute>
                   <HumanReview />
+                </ProtectedRoute>
+              } />
+              <Route path="/ai-humanizer" element={
+                <ProtectedRoute>
+                  <AIHumanizer />
                 </ProtectedRoute>
               } />
               <Route path="/reviewer-dashboard" element={
