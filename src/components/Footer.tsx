@@ -26,7 +26,6 @@ const Footer = () => {
               <li><a href="/#how-it-works" className="hover:text-primary transition-colors">How it Works</a></li>
               <li><a href="/#features" className="hover:text-primary transition-colors">Features</a></li>
               <li><a href="/pricing" className="hover:text-primary transition-colors">Pricing</a></li>
-              <li><a href="/ai-humanizer" className="hover:text-primary transition-colors">AI Humanizer</a></li>
               <li><a href="/auth" className="hover:text-primary transition-colors">Get Started</a></li>
             </ul>
           </div>
@@ -37,7 +36,6 @@ const Footer = () => {
               <li><a href="mailto:support@essayai.com" className="hover:text-primary transition-colors">Contact Support</a></li>
               <li><a href="/pricing" className="hover:text-primary transition-colors">Plans & Pricing</a></li>
               <li><a href="/auth" className="hover:text-primary transition-colors">Sign Up</a></li>
-              <li><a href="/ai-humanizer" className="hover:text-primary transition-colors">AI Humanizer</a></li>
               <li><a href="/dashboard" className="hover:text-primary transition-colors">Dashboard</a></li>
             </ul>
           </div>
